@@ -34,10 +34,57 @@
           }
         }
       }
+    },
+    "/posts" : {
+      "get" : {
+        "tags" : [ "posts" ],
+        "operationId" : "post-list",
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/posts1492360560"
+                },
+                "examples" : {
+                  "post-list" : {
+                    "value" : "[{\"id\":1,\"title\":\"ポストータイトル(포스트 타이틀)\",\"content\":\"ポスト内容(포스트 내용)\",\"author\":\"作成者(작성자)\"},{\"id\":2,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\"},{\"id\":3,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\"},{\"id\":4,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\"}]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components" : {
     "schemas" : {
+      "posts1492360560" : {
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "author" : {
+              "type" : "string",
+              "description" : "作成者(작성자)"
+            },
+            "id" : {
+              "type" : "number",
+              "description" : "id(아이디)"
+            },
+            "title" : {
+              "type" : "string",
+              "description" : "タイトル(타이틀)"
+            },
+            "content" : {
+              "type" : "string",
+              "description" : "コンテンツ(컨텐츠)"
+            }
+          }
+        }
+      },
       "post2079718223" : {
         "type" : "object",
         "properties" : {
