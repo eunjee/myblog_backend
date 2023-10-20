@@ -7,8 +7,10 @@ import jakarta.persistence.Id;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
