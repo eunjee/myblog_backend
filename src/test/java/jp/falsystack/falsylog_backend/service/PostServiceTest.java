@@ -6,6 +6,7 @@ import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import org.assertj.core.groups.Tuple;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,11 @@ class PostServiceTest {
   private PostService postService;
   @Autowired
   private PostRepository postRepository;
+
+  @BeforeEach
+  void beforeEach() {
+    postRepository.deleteAllInBatch();
+  }
 
   @Test
   @DisplayName("記事を作成することができる")

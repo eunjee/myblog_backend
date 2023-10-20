@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
 import jp.falsystack.falsylog_backend.domain.Post;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,11 @@ class PostRepositoryTest {
 
   @Autowired
   private PostRepository postRepository;
+
+  @BeforeEach
+  void beforeEach() {
+    postRepository.deleteAllInBatch();
+  }
 
   @Test
   @DisplayName("記事を作成するとPostテーブルに格納される。")
