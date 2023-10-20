@@ -1,0 +1,60 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Blog Project API 문서",
+    "description" : "블로그 프로젝트 API문서입니다.",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/post" : {
+      "post" : {
+        "tags" : [ "post" ],
+        "operationId" : "post-create",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/post2079718223"
+              },
+              "examples" : {
+                "post-create" : {
+                  "value" : "{\"title\":\"ポストータイトル(포스트 타이틀)\",\"content\":\"ポスト内容(포스트 내용)\",\"author\":\"作成者(작성자)\"}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "post2079718223" : {
+        "type" : "object",
+        "properties" : {
+          "author" : {
+            "type" : "string",
+            "description" : "作成者(작성자)"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "タイトル(타이틀)"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "コンテンツ(컨텐츠)"
+          }
+        }
+      }
+    }
+  }
+}
