@@ -33,9 +33,6 @@ repositories {
 }
 
 test {
-    // asciidoc용
-    // outputs.dir snippetsDir
-
     useJUnitPlatform()
 }
 
@@ -49,19 +46,19 @@ tasks.withType(GenerateSwaggerUI).configureEach {
     copy {
         from "build/resources/main/static/docs"
         into "src/main/resources/static/docs"
-
     }
 }
 
 //openAPI 작성 자동화를 위해 패키징 전에 openapi3 테스크 선실행을 유발
-bootJar{
+bootJar {
     dependsOn(':openapi3')
 }
 
 openapi3 {
-    server = "https://blog.com"
+    // TODO: awsあげるときに設定し直す
+    // server = "https://blog.com"
     title = "Blog Project API 문서"
-    description = "Spring REST Docs with SwaggerUI."
+    description = "블로그 프로젝트 API문서입니다."
     version = "0.0.1"
     outputFileNamePrefix = 'open-api-3.0.1'
     format = 'json'
