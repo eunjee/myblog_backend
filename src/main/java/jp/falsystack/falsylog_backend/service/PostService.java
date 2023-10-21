@@ -1,6 +1,7 @@
 package jp.falsystack.falsylog_backend.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.response.PostResponse;
@@ -22,5 +23,12 @@ public class PostService {
   public List<PostResponse> getPosts() {
     return postRepository.findAll().stream()
         .map(PostResponse::from).toList();
+  }
+
+  public PostResponse getPost(Long postId) {
+    // TODO: Domain全体の例外が決まったら書き換えする。
+    var post = postRepository.findById(postId)
+        .orElseThrow(() -> new NoSuchElementException("Userがないです。"));
+    return PostResponse.from(post);
   }
 }
