@@ -7,6 +7,7 @@
 - Spring Data Jpa
 - Spring Security
 - Spring Rest Docs
+- Jenkins
 - AWS
 
 ## 目標
@@ -31,3 +32,9 @@
   - [x] 記事一覧API作成
   - [x] 記事一覧 Controller Test作成
   - [x] 記事一覧 Service Test作成
+### 2023.10.21
+- [x] 記事詳細照会API作成
+  - [x] 記事詳細照会 統合テスト
+  - [x] 記事詳細照会 Serviceテスト
+  - [x] 記事詳細照会 Repositoryテスト
+
