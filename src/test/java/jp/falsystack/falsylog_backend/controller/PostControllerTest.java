@@ -1,22 +1,25 @@
 package jp.falsystack.falsylog_backend.controller;
 
+import static org.hamcrest.Matchers.is;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,11 +31,6 @@ public class PostControllerTest {
   private ObjectMapper objectMapper;
   @Autowired
   private PostRepository postRepository;
-
-  @BeforeEach
-  void beforeEach() {
-    postRepository.deleteAllInBatch();
-  }
 
   private static Post createPostDto(int count) {
     return Post.builder()
@@ -50,8 +48,13 @@ public class PostControllerTest {
         .build();
   }
 
+  @BeforeEach
+  void beforeEach() {
+    postRepository.deleteAllInBatch();
+  }
+
   @Test
-  @DisplayName("ブログ記事登録")
+  @DisplayName("POST /post ブログ記事登録")
   void post() throws Exception {
     // given
     var request = createPostRequestDto(0);
@@ -59,14 +62,32 @@ public class PostControllerTest {
 
     // expected
     mockMvc.perform(MockMvcRequestBuilders.post("/post")
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(json))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andDo(MockMvcResultHandlers.print());
+        .andExpect(status().isOk())
+        .andDo(print());
   }
 
   @Test
-  @DisplayName("GET /postsに要請するとメインページの記事一覧を返す")
+  @DisplayName("GET /post/{postId} 記事のIDで照会すると記事の詳細が返ってくる。")
+  void getPost() throws Exception {
+    // given
+    var post = createPostDto(0);
+    var savedPost = postRepository.save(post);
+
+    // expected
+    mockMvc.perform(get("/post/{postId}", savedPost.getId())
+            .contentType(APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(savedPost.getId().intValue())))
+        .andExpect(jsonPath("$.title", is("記事タイトル0")))
+        .andExpect(jsonPath("$.content", is("コンテンツ0")))
+        .andExpect(jsonPath("$.author", is("falsystack0")))
+        .andDo(print());
+  }
+
+  @Test
+  @DisplayName("GET /posts 記事一覧を返す")
   void getPosts() throws Exception {
     // given
     var postDto1 = createPostDto(1);
@@ -75,16 +96,16 @@ public class PostControllerTest {
     postRepository.saveAll(List.of(postDto1, postDto2, postDto3));
 
     // expected
-    mockMvc.perform(MockMvcRequestBuilders.get("/posts")
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.length()", Matchers.is(3)))
+    mockMvc.perform(get("/posts")
+            .contentType(APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()", is(3)))
         .andExpectAll(
-            MockMvcResultMatchers.jsonPath("$[0].title", Matchers.is("記事タイトル1")),
-            MockMvcResultMatchers.jsonPath("$[0].content", Matchers.is("コンテンツ1")),
-            MockMvcResultMatchers.jsonPath("$[0].author", Matchers.is("falsystack1"))
+            jsonPath("$[0].title", is("記事タイトル1")),
+            jsonPath("$[0].content", is("コンテンツ1")),
+            jsonPath("$[0].author", is("falsystack1"))
         )
-        .andDo(MockMvcResultHandlers.print());
+        .andDo(print());
 
   }
 
