@@ -22,25 +22,38 @@ class PostRepositoryTest {
     postRepository.deleteAllInBatch();
   }
 
+  private static Post createPostDto(int position) {
+    return Post.builder()
+        .title("タイトル" + position)
+        .content("コンテンツ" + position)
+        .author("作成者" + position)
+        .build();
+  }
+
+  @Test
+  @DisplayName("記事のIDを受取該当する記事を返す")
+  void findByPostId() {
+    // given
+    var post = createPostDto(1);
+    var savedPost = postRepository.save(post);
+    var postId = savedPost.getId();
+
+    // when
+    var findPost = postRepository.findById(postId).get();
+
+    // then
+    assertThat(findPost.getTitle()).isEqualTo("タイトル1");
+    assertThat(findPost.getContent()).isEqualTo("コンテンツ1");
+    assertThat(findPost.getAuthor()).isEqualTo("作成者1");
+  }
+
   @Test
   @DisplayName("記事を作成するとPostテーブルに格納される。")
   void save() {
     // given
-    var post1 = Post.builder()
-        .title("タイトル１")
-        .content("コンテンツ１")
-        .author("作成者１")
-        .build();
-    var post2 = Post.builder()
-        .title("タイトル２")
-        .content("コンテンツ２")
-        .author("作成者２")
-        .build();
-    var post3 = Post.builder()
-        .title("タイトル３")
-        .content("コンテンツ３")
-        .author("作成者３")
-        .build();
+    var post1 = createPostDto(1);
+    var post2 = createPostDto(2);
+    var post3 = createPostDto(3);
 
     // when
     postRepository.saveAll(List.of(post1, post2, post3));
@@ -51,9 +64,9 @@ class PostRepositoryTest {
         .hasSize(3)
         .extracting("title", "content", "author")
         .containsExactlyInAnyOrder(
-            tuple("タイトル１", "コンテンツ１", "作成者１"),
-            tuple("タイトル２", "コンテンツ２", "作成者２"),
-            tuple("タイトル３", "コンテンツ３", "作成者３")
+            tuple("タイトル1", "コンテンツ1", "作成者1"),
+            tuple("タイトル2", "コンテンツ2", "作成者2"),
+            tuple("タイトル3", "コンテンツ3", "作成者3")
         );
   }
 }
