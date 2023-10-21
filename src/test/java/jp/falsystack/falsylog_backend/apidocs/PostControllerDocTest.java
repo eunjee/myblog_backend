@@ -6,6 +6,7 @@ import java.util.List;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +34,11 @@ public class PostControllerDocTest {
   private ObjectMapper objectMapper;
   @Autowired
   private PostRepository postRepository;
+
+  @BeforeEach
+  void beforeEach() {
+    postRepository.deleteAllInBatch();
+  }
 
   @Test
   @DisplayName("post要請で受け取ったパラメーターでポストが正常に登録される。")

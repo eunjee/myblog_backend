@@ -49,7 +49,7 @@
                 },
                 "examples" : {
                   "post-list" : {
-                    "value" : "[{\"id\":1,\"title\":\"ポストータイトル(포스트 타이틀)\",\"content\":\"ポスト内容(포스트 내용)\",\"author\":\"作成者(작성자)\"},{\"id\":2,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\"},{\"id\":3,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\"},{\"id\":4,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\"}]"
+                    "value" : "[{\"id\":2,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\"},{\"id\":3,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\"},{\"id\":4,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\"}]"
                   }
                 }
               }
