@@ -1,9 +1,11 @@
 package jp.falsystack.falsylog_backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
@@ -22,6 +24,14 @@ class PostServiceTest {
   private PostService postService;
   @Autowired
   private PostRepository postRepository;
+
+  private static Post createPostDto(int count) {
+    return Post.builder()
+        .title("記事タイトル" + count)
+        .content("コンテンツ" + count)
+        .author("falsystack" + count)
+        .build();
+  }
 
   @BeforeEach
   void beforeEach() {
@@ -51,6 +61,35 @@ class PostServiceTest {
   }
 
   @Test
+  @DisplayName("記事のIDを受取該当する記事の詳細を返す")
+  void getPost() {
+    // given
+    var post = createPostDto(0);
+    var savedPost = postRepository.save(post);
+    var postId = savedPost.getId();
+
+    // when
+    var postResponse = postService.getPost(postId);
+
+    // then
+    assertThat(postResponse.getTitle()).isEqualTo("記事タイトル0");
+    assertThat(postResponse.getContent()).isEqualTo("コンテンツ0");
+    assertThat(postResponse.getAuthor()).isEqualTo("falsystack0");
+  }
+
+  @Test
+  @DisplayName("記事のIDを受取該当する記事がない場合例外を返す")
+  void getPostFailed() {
+    // given
+    var postId = 1L;
+
+    // expected
+    assertThatThrownBy(() -> postService.getPost(postId))
+        .isInstanceOf(NoSuchElementException.class)
+        .hasMessage("Userがないです。");
+  }
+
+  @Test
   @DisplayName("DBから読んできたPostをPostResponseに書き換えてリストを返す")
   void getPosts() {
     // given
@@ -70,13 +109,5 @@ class PostServiceTest {
             tuple("記事タイトル2", "コンテンツ2"),
             tuple("記事タイトル3", "コンテンツ3")
         );
-  }
-
-  private static Post createPostDto(int count) {
-    return Post.builder()
-        .title("記事タイトル" + count)
-        .content("コンテンツ" + count)
-        .author("falsystack" + count)
-        .build();
   }
 }
