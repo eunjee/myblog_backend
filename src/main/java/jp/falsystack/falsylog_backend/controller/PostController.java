@@ -21,7 +21,7 @@ public class PostController {
   private final PostService postService;
 
   @PostMapping("/post")
-  public void post(@RequestBody PostCreate postCreate) {
+  public void createPost(@RequestBody PostCreate postCreate) {
     PostWrite postWrite = PostWrite.from(postCreate);
     postService.write(postWrite);
   }
@@ -32,8 +32,7 @@ public class PostController {
   }
 
   @GetMapping("/posts")
-  public List<PostResponse> posts() {
-
+  public List<PostResponse> getPosts() {
     return postService.getPosts();
   }
 

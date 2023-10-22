@@ -32,7 +32,7 @@ public class PostControllerTest {
   @Autowired
   private PostRepository postRepository;
 
-  private static Post createPostDto(int count) {
+  private static Post createPostEntity(int count) {
     return Post.builder()
         .title("記事タイトル" + count)
         .content("コンテンツ" + count)
@@ -72,7 +72,7 @@ public class PostControllerTest {
   @DisplayName("GET /post/{postId} 記事のIDで照会すると記事の詳細が返ってくる。")
   void getPost() throws Exception {
     // given
-    var post = createPostDto(0);
+    var post = createPostEntity(0);
     var savedPost = postRepository.save(post);
 
     // expected
