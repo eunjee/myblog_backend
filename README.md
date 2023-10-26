@@ -37,4 +37,6 @@
   - [x] 記事詳細照会 統合テスト
   - [x] 記事詳細照会 Serviceテスト
   - [x] 記事詳細照会 Repositoryテスト
-
+### 2023.10.26
+- [x] 記事詳細照会DOCテスト作成 (getPost)
+- [x] 記事削除DOCテスト作成 (deletePost)

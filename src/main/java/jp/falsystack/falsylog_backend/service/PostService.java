@@ -31,4 +31,11 @@ public class PostService {
         .orElseThrow(() -> new NoSuchElementException("Userがないです。"));
     return PostResponse.from(post);
   }
+
+  public void delete(Long postId) {
+    // TODO: Domain全体の例外が決まったら書き換えする。
+    var post = postRepository.findById(postId)
+        .orElseThrow(NoSuchElementException::new);
+    postRepository.delete(post);
+  }
 }

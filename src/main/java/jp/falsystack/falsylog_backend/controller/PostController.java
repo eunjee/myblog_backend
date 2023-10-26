@@ -7,6 +7,7 @@ import jp.falsystack.falsylog_backend.service.PostService;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,11 @@ public class PostController {
   @GetMapping("/post/{postId}")
   public PostResponse getPost(@PathVariable Long postId) {
     return postService.getPost(postId);
+  }
+
+  @DeleteMapping("/post/{postId}")
+  public void deletePost(@PathVariable Long postId) {
+    postService.delete(postId);
   }
 
   @GetMapping("/posts")

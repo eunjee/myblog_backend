@@ -48,6 +48,15 @@ public class PostControllerTest {
         .build();
   }
 
+  private static PostCreate createPostRequesOptionaltDto(String title, String content,
+      String author) {
+    return PostCreate.builder()
+        .title(title)
+        .content(content)
+        .author(author)
+        .build();
+  }
+
   @BeforeEach
   void beforeEach() {
     postRepository.deleteAllInBatch();
@@ -65,6 +74,21 @@ public class PostControllerTest {
             .contentType(APPLICATION_JSON)
             .content(json))
         .andExpect(status().isOk())
+        .andDo(print());
+  }
+
+  @Test
+  @DisplayName("POST /post タイトルがないとブログ記事登録に失敗する。")
+  void postFail_No_Title() throws Exception {
+    // given
+    var request = createPostRequesOptionaltDto("null", "内容1", null);
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(MockMvcRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest())
         .andDo(print());
   }
 
@@ -87,12 +111,26 @@ public class PostControllerTest {
   }
 
   @Test
+  @DisplayName("DELETE /post/{postId} 記事のIDを元に削除を行う")
+  void deletePost() throws Exception {
+    // given
+    var post = createPostEntity(0);
+    var savedPost = postRepository.save(post);
+
+    // expected
+    mockMvc.perform(MockMvcRequestBuilders.delete("/post/{potId}", savedPost.getId())
+            .contentType(APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andDo(print());
+  }
+
+  @Test
   @DisplayName("GET /posts 記事一覧を返す")
   void getPosts() throws Exception {
     // given
-    var postDto1 = createPostDto(1);
-    var postDto2 = createPostDto(2);
-    var postDto3 = createPostDto(3);
+    var postDto1 = createPostEntity(1);
+    var postDto2 = createPostEntity(2);
+    var postDto3 = createPostEntity(3);
     postRepository.saveAll(List.of(postDto1, postDto2, postDto3));
 
     // expected

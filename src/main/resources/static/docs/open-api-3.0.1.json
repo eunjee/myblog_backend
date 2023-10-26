@@ -35,6 +35,56 @@
         }
       }
     },
+    "/post/{postId}" : {
+      "get" : {
+        "tags" : [ "post" ],
+        "operationId" : "post-detail",
+        "parameters" : [ {
+          "name" : "postId",
+          "in" : "path",
+          "description" : "ポストID(게시글ID)",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/post-postId2106150254"
+                },
+                "examples" : {
+                  "post-detail" : {
+                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\"}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "post" ],
+        "operationId" : "post-delete",
+        "parameters" : [ {
+          "name" : "postId",
+          "in" : "path",
+          "description" : "ポストID(게시글ID)",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200"
+          }
+        }
+      }
+    },
     "/posts" : {
       "get" : {
         "tags" : [ "posts" ],
@@ -49,7 +99,7 @@
                 },
                 "examples" : {
                   "post-list" : {
-                    "value" : "[{\"id\":2,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\"},{\"id\":3,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\"},{\"id\":4,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\"}]"
+                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\"}]"
                   }
                 }
               }
@@ -82,6 +132,27 @@
               "type" : "string",
               "description" : "コンテンツ(컨텐츠)"
             }
+          }
+        }
+      },
+      "post-postId2106150254" : {
+        "type" : "object",
+        "properties" : {
+          "author" : {
+            "type" : "string",
+            "description" : "作成者(작성자)"
+          },
+          "id" : {
+            "type" : "number",
+            "description" : "ID"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "タイトル(타이틀)"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "コンテンツ(컨텐츠)"
           }
         }
       },
