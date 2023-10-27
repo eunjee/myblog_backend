@@ -35,7 +35,15 @@ public class PostControllerTest {
   private static Post createPostEntity(int count) {
     return Post.builder()
         .title("記事タイトル" + count)
-        .content("コンテンツ" + count)
+        .content("コンテンツ1234" + count)
+        .author("falsystack" + count)
+        .build();
+  }
+
+  private static Post createPostEntityOptional(int count) {
+    return Post.builder()
+        .title("記事タイトル" + count)
+        .content("コンテンツ1234" + count)
         .author("falsystack" + count)
         .build();
   }
@@ -43,7 +51,7 @@ public class PostControllerTest {
   private static PostCreate createPostRequestDto(int count) {
     return PostCreate.builder()
         .title("記事タイトル" + count)
-        .content("コンテンツ" + count)
+        .content("コンテンツ1234" + count)
         .author("falsystack" + count)
         .build();
   }
@@ -81,7 +89,7 @@ public class PostControllerTest {
   @DisplayName("POST /post タイトルがないとブログ記事登録に失敗する。")
   void postFail_No_Title() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("null", "内容1", null);
+    var request = createPostRequesOptionaltDto(null, "内容12345678", "作成者");
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -89,6 +97,71 @@ public class PostControllerTest {
             .contentType(APPLICATION_JSON)
             .content(json))
         .andExpect(status().isBadRequest())
+        .andExpectAll(
+            jsonPath("$.code", is("400")),
+            jsonPath("$.message", is("間違ったリクエストです。")),
+            jsonPath("$.validation.title", is("タイトルを入力してください。"))
+        )
+        .andDo(print());
+  }
+
+  @Test
+  @DisplayName("POST /post タイトルは２０文字以下で入力しないと記事登録に失敗する。")
+  void postFail_Least_One_Word() throws Exception {
+    // given
+    var request = createPostRequesOptionaltDto("1234567890,1234567890", "内容12345678", "作成者");
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(MockMvcRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest())
+        .andExpectAll(
+            jsonPath("$.code", is("400")),
+            jsonPath("$.message", is("間違ったリクエストです。")),
+            jsonPath("$.validation.title", is("タイトルは１文字以上２０文字以下で作成してください。"))
+        )
+        .andDo(print());
+  }
+
+  @Test
+  @DisplayName("POST /post コンテンツがないとブログ記事登録に失敗する。")
+  void postFailContentMustBeNotBlank() throws Exception {
+    // given
+    var request = createPostRequesOptionaltDto("タイトル", null, "作成者");
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(MockMvcRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest())
+        .andExpectAll(
+            jsonPath("$.code", is("400")),
+            jsonPath("$.message", is("間違ったリクエストです。")),
+            jsonPath("$.validation.content", is("内容を入力してください。"))
+        )
+        .andDo(print());
+  }
+
+  @Test
+  @DisplayName("POST /post コンテンツは１０文字以上入力しないと記事登録に失敗する。")
+  void postFailContentMustBeLeastTenWord() throws Exception {
+    // given
+    var request = createPostRequesOptionaltDto("タイトル", "内容1234567", "作成者");
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(MockMvcRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest())
+        .andExpectAll(
+            jsonPath("$.code", is("400")),
+            jsonPath("$.message", is("間違ったリクエストです。")),
+            jsonPath("$.validation.content", is("１０文字以上作成してください。"))
+        )
         .andDo(print());
   }
 

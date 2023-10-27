@@ -2,7 +2,9 @@ package jp.falsystack.falsylog_backend.apidocs;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -24,8 +26,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -104,7 +104,9 @@ public class PostControllerDocTest {
                 fieldWithPath("id").type(NUMBER).description("ID"),
                 fieldWithPath("title").type(STRING).description("タイトル(타이틀)"),
                 fieldWithPath("content").type(STRING).description("コンテンツ(컨텐츠)"),
-                fieldWithPath("author").type(STRING).description("作成者(작성자)")
+                fieldWithPath("author").type(STRING).description("作成者(작성자)"),
+                fieldWithPath("createdAt").type(STRING).description("作成日(작성일)"),
+                fieldWithPath("updatedAt").type(STRING).description("更新日(갱신일)")
             )
         ))
         .andDo(print());
@@ -143,14 +145,12 @@ public class PostControllerDocTest {
         .andDo(
             document("post-list",
                 responseFields(
-                    fieldWithPath("[].id").type(NUMBER)
-                        .description("id(아이디)"),
-                    fieldWithPath("[].title").type(STRING)
-                        .description("タイトル(타이틀)"),
-                    fieldWithPath("[].content").type(STRING)
-                        .description("コンテンツ(컨텐츠)"),
-                    fieldWithPath("[].author").type(STRING)
-                        .description("作成者(작성자)")
+                    fieldWithPath("[].id").type(NUMBER).description("id(아이디)"),
+                    fieldWithPath("[].title").type(STRING).description("タイトル(타이틀)"),
+                    fieldWithPath("[].content").type(STRING).description("コンテンツ(컨텐츠)"),
+                    fieldWithPath("[].author").type(STRING).description("作成者(작성자)"),
+                    fieldWithPath("[].createdAt").type(STRING).description("作成日(작성일)"),
+                    fieldWithPath("[].updatedAt").type(STRING).description("更新日(갱신일)")
                 )
             )
         )
