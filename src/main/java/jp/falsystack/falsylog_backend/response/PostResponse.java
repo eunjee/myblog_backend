@@ -1,5 +1,6 @@
 package jp.falsystack.falsylog_backend.response;
 
+import java.time.LocalDateTime;
 import jp.falsystack.falsylog_backend.domain.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,13 +12,18 @@ public class PostResponse {
   private final String title;
   private final String content;
   private final String author;
+  private final LocalDateTime createdAt;
+  private final LocalDateTime updatedAt;
 
   @Builder
-  private PostResponse(Long id, String title, String content, String author) {
+  public PostResponse(Long id, String title, String content, String author, LocalDateTime createdAt,
+      LocalDateTime updatedAt) {
     this.id = id;
     this.title = title;
     this.content = content;
     this.author = author;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   public static PostResponse from(Post post) {
@@ -26,6 +32,8 @@ public class PostResponse {
         .title(post.getTitle())
         .content(post.getContent())
         .author(post.getAuthor())
+        .createdAt(post.getCreatedAt())
+        .updatedAt(post.getUpdatedAt())
         .build();
   }
 }
