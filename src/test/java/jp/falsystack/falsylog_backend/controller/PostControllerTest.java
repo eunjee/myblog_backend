@@ -9,7 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
+import jp.falsystack.falsylog_backend.domain.PostHashTag;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,11 +44,13 @@ public class PostControllerTest {
   }
 
   private static Post createPostEntityOptional(int count) {
-    return Post.builder()
+    var post = Post.builder()
         .title("記事タイトル" + count)
         .content("コンテンツ1234" + count)
         .author("falsystack" + count)
         .build();
+    post.addPostHashTags("#Spring#Java#Javascript");
+    return post;
   }
 
   private static PostCreate createPostRequestDto(int count) {
@@ -53,21 +58,24 @@ public class PostControllerTest {
         .title("記事タイトル" + count)
         .content("コンテンツ1234" + count)
         .author("falsystack" + count)
+        .hashTags(null)
         .build();
   }
 
   private static PostCreate createPostRequesOptionaltDto(String title, String content,
-      String author) {
+      String author, String hashTags) {
     return PostCreate.builder()
         .title(title)
         .content(content)
         .author(author)
+        .hashTags(hashTags)
         .build();
   }
 
   @BeforeEach
   void beforeEach() {
-    postRepository.deleteAllInBatch();
+    postRepository.deleteAll();
+//    postRepository.deleteAllInBatch();
   }
 
   @Test
@@ -86,10 +94,27 @@ public class PostControllerTest {
   }
 
   @Test
+  @DisplayName("POST /post 記事を登録する時にhashtagがあればhashtagも一緒に登録される。")
+  void postCreateWithHashTags() throws Exception {
+    // given
+    var request = createPostRequesOptionaltDto("ハッシュタグ付き記事",
+        "ハッシュタグ機能が出来ました。", "作成者",
+        "#spring#java#Spring");
+    var json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(MockMvcRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json)
+        ).andExpect(status().isOk())
+        .andDo(print());
+  }
+
+  @Test
   @DisplayName("POST /post タイトルがないとブログ記事登録に失敗する。")
   void postFail_No_Title() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto(null, "内容12345678", "作成者");
+    var request = createPostRequesOptionaltDto(null, "内容12345678", "作成者", null);
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -109,7 +134,7 @@ public class PostControllerTest {
   @DisplayName("POST /post タイトルは２０文字以下で入力しないと記事登録に失敗する。")
   void postFail_Least_One_Word() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("1234567890,1234567890", "内容12345678", "作成者");
+    var request = createPostRequesOptionaltDto("1234567890,1234567890", "内容12345678", "作成者", null);
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -129,7 +154,7 @@ public class PostControllerTest {
   @DisplayName("POST /post コンテンツがないとブログ記事登録に失敗する。")
   void postFailContentMustBeNotBlank() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("タイトル", null, "作成者");
+    var request = createPostRequesOptionaltDto("タイトル", null, "作成者", null);
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -149,7 +174,7 @@ public class PostControllerTest {
   @DisplayName("POST /post コンテンツは１０文字以上入力しないと記事登録に失敗する。")
   void postFailContentMustBeLeastTenWord() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("タイトル", "内容1234567", "作成者");
+    var request = createPostRequesOptionaltDto("タイトル", "内容1234567", "作成者", null);
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -178,10 +203,30 @@ public class PostControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(savedPost.getId().intValue())))
         .andExpect(jsonPath("$.title", is("記事タイトル0")))
-        .andExpect(jsonPath("$.content", is("コンテンツ0")))
+        .andExpect(jsonPath("$.content", is("コンテンツ12340")))
         .andExpect(jsonPath("$.author", is("falsystack0")))
         .andDo(print());
   }
+
+  @Test
+  @DisplayName("GET /post/{postId} 記事のIDで照会すると記事の詳細が返ってくる。")
+  void getPostWithHashTags() throws Exception {
+    // given
+    var post = createPostEntityOptional(0);
+    var savedPost = postRepository.save(post);
+
+    // expected
+    mockMvc.perform(get("/post/{postId}", savedPost.getId())
+            .contentType(APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(savedPost.getId().intValue())))
+        .andExpect(jsonPath("$.title", is("記事タイトル0")))
+        .andExpect(jsonPath("$.content", is("コンテンツ12340")))
+        .andExpect(jsonPath("$.author", is("falsystack0")))
+        .andExpect(jsonPath("$.hashTags.[0].name", is("#Spring")))
+        .andDo(print());
+  }
+
 
   @Test
   @DisplayName("DELETE /post/{postId} 記事のIDを元に削除を行う")
@@ -213,11 +258,10 @@ public class PostControllerTest {
         .andExpect(jsonPath("$.length()", is(3)))
         .andExpectAll(
             jsonPath("$[0].title", is("記事タイトル1")),
-            jsonPath("$[0].content", is("コンテンツ1")),
+            jsonPath("$[0].content", is("コンテンツ12341")),
             jsonPath("$[0].author", is("falsystack1"))
         )
         .andDo(print());
-
   }
 
 

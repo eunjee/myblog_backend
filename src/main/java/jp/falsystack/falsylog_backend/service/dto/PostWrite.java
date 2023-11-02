@@ -10,12 +10,14 @@ public class PostWrite {
   private final String title;
   private final String content;
   private final String author;
+  private final String hashTags;
 
   @Builder
-  private PostWrite(String title, String content, String author) {
+  private PostWrite(String title, String content, String author, String hashTags) {
     this.title = title;
     this.content = content;
     this.author = author;
+    this.hashTags = hashTags;
   }
 
   public static PostWrite from(PostCreate postCreate) {
@@ -23,6 +25,7 @@ public class PostWrite {
         .title(postCreate.getTitle())
         .content(postCreate.getContent())
         .author(postCreate.getAuthor())
+        .hashTags(postCreate.getHashTags())
         .build();
   }
 }

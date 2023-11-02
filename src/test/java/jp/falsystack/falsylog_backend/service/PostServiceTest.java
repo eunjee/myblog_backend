@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import java.util.List;
 import java.util.NoSuchElementException;
 import jp.falsystack.falsylog_backend.domain.Post;
+import jp.falsystack.falsylog_backend.repository.HashTagRepository;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
 import jp.falsystack.falsylog_backend.response.PostResponse;
@@ -24,6 +25,8 @@ class PostServiceTest {
   private PostService postService;
   @Autowired
   private PostRepository postRepository;
+  @Autowired
+  private HashTagRepository hashTagRepository;
 
   private static Post createPostDto(int count) {
     return Post.builder()
@@ -35,7 +38,37 @@ class PostServiceTest {
 
   @BeforeEach
   void beforeEach() {
-    postRepository.deleteAllInBatch();
+    postRepository.deleteAll();
+//    postRepository.deleteAllInBatch();
+  }
+
+  @Test
+  @DisplayName("ハッシュタグを選んで記事を作成することができる")
+  void writeWithTags() {
+    // given
+    var post = PostWrite.from(PostCreate.builder()
+        .title("タイトル")
+        .content("コンテンツ")
+        .author("作成者")
+        .hashTags("#Spring#Java")
+        .build());
+
+    // when
+    postService.write(post);
+
+    // then
+    var posts = postRepository.findAll();
+    var tags = hashTagRepository.findAll();
+
+    assertThat(posts).hasSize(1)
+        .extracting("title", "author")
+        .containsExactlyInAnyOrder(
+            tuple("タイトル", "作成者")
+        );
+
+    assertThat(tags).hasSize(2)
+        .extracting("name")
+        .contains("#Spring", "#Java");
   }
 
   @Test

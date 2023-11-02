@@ -17,11 +17,13 @@ public class PostCreate {
   @Size(min = 10, message = "１０文字以上作成してください。")
   private final String content;
   private final String author;
+  private final String hashTags;
 
   @Builder
-  public PostCreate(String title, String content, String author) {
+  public PostCreate(String title, String content, String author, String hashTags) {
     this.title = title;
     this.content = content;
     this.author = author;
+    this.hashTags = hashTags;
   }
 }

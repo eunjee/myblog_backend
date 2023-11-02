@@ -5,6 +5,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -26,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -63,6 +65,7 @@ public class PostControllerDocTest {
         .title("ポストータイトル(포스트 타이틀)")
         .content("ポスト内容(포스트 내용)")
         .author("作成者(작성자)")
+        .hashTags("ハッシュタグ(해시태그)")
         .build();
     var json = objectMapper.writeValueAsString(request);
 
@@ -78,7 +81,10 @@ public class PostControllerDocTest {
                     fieldWithPath("content").type(STRING)
                         .description("コンテンツ(컨텐츠)"),
                     fieldWithPath("author").type(STRING)
-                        .description("作成者(작성자)")
+                        .description("作成者(작성자)"),
+                    fieldWithPath("hashTags").type(STRING)
+                        .description("#Spring#Java#Javascript")
+                        .optional()
                 )
             )
         )

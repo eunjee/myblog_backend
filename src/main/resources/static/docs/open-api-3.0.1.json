@@ -18,11 +18,11 @@
           "content" : {
             "application/json;charset=UTF-8" : {
               "schema" : {
-                "$ref" : "#/components/schemas/post2079718223"
+                "$ref" : "#/components/schemas/post419649525"
               },
               "examples" : {
                 "post-create" : {
-                  "value" : "{\"title\":\"ポストータイトル(포스트 타이틀)\",\"content\":\"ポスト内容(포스트 내용)\",\"author\":\"作成者(작성자)\"}"
+                  "value" : "{\"title\":\"ポストータイトル(포스트 타이틀)\",\"content\":\"ポスト内容(포스트 내용)\",\"author\":\"作成者(작성자)\",\"hashTags\":\"ハッシュタグ(해시태그)\"}"
                 }
               }
             }
@@ -54,11 +54,11 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/post-postId2106150254"
+                  "$ref" : "#/components/schemas/post-postId1414243616"
                 },
                 "examples" : {
                   "post-detail" : {
-                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\"}"
+                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"createdAt\":\"2023-11-02T22:59:35.414385\",\"updatedAt\":\"2023-11-02T22:59:35.414385\"}"
                   }
                 }
               }
@@ -95,11 +95,11 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/posts1492360560"
+                  "$ref" : "#/components/schemas/posts1518091262"
                 },
                 "examples" : {
                   "post-list" : {
-                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\"}]"
+                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"createdAt\":\"2023-11-02T22:59:35.859384\",\"updatedAt\":\"2023-11-02T22:59:35.859384\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"createdAt\":\"2023-11-02T22:59:35.860043\",\"updatedAt\":\"2023-11-02T22:59:35.860043\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"createdAt\":\"2023-11-02T22:59:35.860459\",\"updatedAt\":\"2023-11-02T22:59:35.860459\"}]"
                   }
                 }
               }
@@ -111,11 +111,15 @@
   },
   "components" : {
     "schemas" : {
-      "posts1492360560" : {
+      "posts1518091262" : {
         "type" : "array",
         "items" : {
           "type" : "object",
           "properties" : {
+            "createdAt" : {
+              "type" : "string",
+              "description" : "作成日(작성일)"
+            },
             "author" : {
               "type" : "string",
               "description" : "作成者(작성자)"
@@ -131,13 +135,42 @@
             "content" : {
               "type" : "string",
               "description" : "コンテンツ(컨텐츠)"
+            },
+            "updatedAt" : {
+              "type" : "string",
+              "description" : "更新日(갱신일)"
             }
           }
         }
       },
-      "post-postId2106150254" : {
+      "post419649525" : {
         "type" : "object",
         "properties" : {
+          "hashTags" : {
+            "type" : "string",
+            "description" : "ハッシュタグ(해시태그)"
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "作成者(작성자)"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "タイトル(타이틀)"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "コンテンツ(컨텐츠)"
+          }
+        }
+      },
+      "post-postId1414243616" : {
+        "type" : "object",
+        "properties" : {
+          "createdAt" : {
+            "type" : "string",
+            "description" : "作成日(작성일)"
+          },
           "author" : {
             "type" : "string",
             "description" : "作成者(작성자)"
@@ -153,23 +186,10 @@
           "content" : {
             "type" : "string",
             "description" : "コンテンツ(컨텐츠)"
-          }
-        }
-      },
-      "post2079718223" : {
-        "type" : "object",
-        "properties" : {
-          "author" : {
-            "type" : "string",
-            "description" : "作成者(작성자)"
           },
-          "title" : {
+          "updatedAt" : {
             "type" : "string",
-            "description" : "タイトル(타이틀)"
-          },
-          "content" : {
-            "type" : "string",
-            "description" : "コンテンツ(컨텐츠)"
+            "description" : "更新日(갱신일)"
           }
         }
       }
