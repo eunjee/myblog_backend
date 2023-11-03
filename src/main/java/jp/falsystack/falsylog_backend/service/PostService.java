@@ -39,15 +39,18 @@ public class PostService {
         .map(PostResponse::from).toList();
   }
 
+  @Transactional
   public PostResponse getPost(Long postId) {
     // TODO: Domain全体の例外が決まったら書き換えする。
     var post = postRepository.findById(postId)
         .orElseThrow(() -> new NoSuchElementException("Userがないです。"));
 
     var list = new ArrayList<HashTag>();
-    for (PostHashTag postHashTag : post.getPostHashTags()) {
-      log.info("postHashTag = {}", postHashTag.getHashTag().getName());
-      list.add(postHashTag.getHashTag());
+    if (post.getPostHashTags() != null && !post.getPostHashTags().isEmpty()) {
+      for (PostHashTag postHashTag : post.getPostHashTags()) {
+        log.info("postHashTag = {}", postHashTag.getHashTag().getName());
+        list.add(postHashTag.getHashTag());
+      }
     }
 
     var response = PostResponse.from(post);
