@@ -5,7 +5,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.JsonFieldType.*;
+import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -27,9 +27,9 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -52,9 +52,20 @@ public class PostControllerDocTest {
         .build();
   }
 
+  private static Post createPostEntityOptional(int count) {
+    var post = Post.builder()
+        .title("記事タイトル" + count)
+        .content("コンテンツ1234" + count)
+        .author("falsystack" + count)
+        .build();
+    post.addPostHashTags("#Spring#Java#Javascript");
+    return post;
+  }
+
   @BeforeEach
   void beforeEach() {
-    postRepository.deleteAllInBatch();
+//    postRepository.deleteAllInBatch();
+    postRepository.deleteAll();
   }
 
   @Test
@@ -96,7 +107,7 @@ public class PostControllerDocTest {
   @DisplayName("GET /post/{postId} ポスト詳細照会")
   void getPostById() throws Exception {
     // given
-    var postDto1 = createPostDto(1);
+    var postDto1 = createPostEntityOptional(1);
     var savedPost = postRepository.save(postDto1);
 
     // expected
@@ -111,6 +122,10 @@ public class PostControllerDocTest {
                 fieldWithPath("title").type(STRING).description("タイトル(타이틀)"),
                 fieldWithPath("content").type(STRING).description("コンテンツ(컨텐츠)"),
                 fieldWithPath("author").type(STRING).description("作成者(작성자)"),
+                fieldWithPath("hashTags[].name").type(STRING).description("タグネーム(태그이름)"),
+                fieldWithPath("hashTags[].createdAt").type(STRING).description("createdAt").optional().ignored(),
+                fieldWithPath("hashTags[].updatedAt").type(STRING).description("updatedAt").optional().ignored(),
+                fieldWithPath("hashTags[].name").type(STRING).description("タグネーム(태그이름)"),
                 fieldWithPath("createdAt").type(STRING).description("作成日(작성일)"),
                 fieldWithPath("updatedAt").type(STRING).description("更新日(갱신일)")
             )
@@ -138,6 +153,7 @@ public class PostControllerDocTest {
 
   @Test
   @DisplayName("GET /posts,　ポスト一覧")
+  @Transactional
   void getPosts() throws Exception {
     // given
     var postDto1 = createPostDto(1);
@@ -155,6 +171,7 @@ public class PostControllerDocTest {
                     fieldWithPath("[].title").type(STRING).description("タイトル(타이틀)"),
                     fieldWithPath("[].content").type(STRING).description("コンテンツ(컨텐츠)"),
                     fieldWithPath("[].author").type(STRING).description("作成者(작성자)"),
+                    fieldWithPath("[].hashTags").type(ARRAY).ignored().optional(),
                     fieldWithPath("[].createdAt").type(STRING).description("作成日(작성일)"),
                     fieldWithPath("[].updatedAt").type(STRING).description("更新日(갱신일)")
                 )
