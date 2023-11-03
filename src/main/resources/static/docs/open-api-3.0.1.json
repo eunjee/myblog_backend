@@ -18,7 +18,7 @@
           "content" : {
             "application/json;charset=UTF-8" : {
               "schema" : {
-                "$ref" : "#/components/schemas/post419649525"
+                "$ref" : "#/components/schemas/post837337146"
               },
               "examples" : {
                 "post-create" : {
@@ -54,11 +54,11 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/post-postId1414243616"
+                  "$ref" : "#/components/schemas/post-postId594669988"
                 },
                 "examples" : {
                   "post-detail" : {
-                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"createdAt\":\"2023-11-02T22:59:35.414385\",\"updatedAt\":\"2023-11-02T22:59:35.414385\"}"
+                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[{\"createdAt\":\"2023-11-03T16:06:36.330795\",\"updatedAt\":\"2023-11-03T16:06:36.330795\",\"name\":\"#Spring\"},{\"createdAt\":\"2023-11-03T16:06:36.333026\",\"updatedAt\":\"2023-11-03T16:06:36.333026\",\"name\":\"#Java\"},{\"createdAt\":\"2023-11-03T16:06:36.333849\",\"updatedAt\":\"2023-11-03T16:06:36.333849\",\"name\":\"#Javascript\"}],\"createdAt\":\"2023-11-03T16:06:36.310959\",\"updatedAt\":\"2023-11-03T16:06:36.310959\"}"
                   }
                 }
               }
@@ -99,7 +99,7 @@
                 },
                 "examples" : {
                   "post-list" : {
-                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"createdAt\":\"2023-11-02T22:59:35.859384\",\"updatedAt\":\"2023-11-02T22:59:35.859384\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"createdAt\":\"2023-11-02T22:59:35.860043\",\"updatedAt\":\"2023-11-02T22:59:35.860043\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"createdAt\":\"2023-11-02T22:59:35.860459\",\"updatedAt\":\"2023-11-02T22:59:35.860459\"}]"
+                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-03T16:06:36.778367\",\"updatedAt\":\"2023-11-03T16:06:36.778367\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-03T16:06:36.779046\",\"updatedAt\":\"2023-11-03T16:06:36.779046\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-03T16:06:36.779476\",\"updatedAt\":\"2023-11-03T16:06:36.779476\"}]"
                   }
                 }
               }
@@ -111,6 +111,27 @@
   },
   "components" : {
     "schemas" : {
+      "post837337146" : {
+        "type" : "object",
+        "properties" : {
+          "hashTags" : {
+            "type" : "string",
+            "description" : "#Spring#Java#Javascript"
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "作成者(작성자)"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "タイトル(타이틀)"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "コンテンツ(컨텐츠)"
+          }
+        }
+      },
       "posts1518091262" : {
         "type" : "array",
         "items" : {
@@ -143,33 +164,24 @@
           }
         }
       },
-      "post419649525" : {
-        "type" : "object",
-        "properties" : {
-          "hashTags" : {
-            "type" : "string",
-            "description" : "ハッシュタグ(해시태그)"
-          },
-          "author" : {
-            "type" : "string",
-            "description" : "作成者(작성자)"
-          },
-          "title" : {
-            "type" : "string",
-            "description" : "タイトル(타이틀)"
-          },
-          "content" : {
-            "type" : "string",
-            "description" : "コンテンツ(컨텐츠)"
-          }
-        }
-      },
-      "post-postId1414243616" : {
+      "post-postId594669988" : {
         "type" : "object",
         "properties" : {
           "createdAt" : {
             "type" : "string",
             "description" : "作成日(작성일)"
+          },
+          "hashTags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "name" : {
+                  "type" : "string",
+                  "description" : "タグネーム(태그이름)"
+                }
+              }
+            }
           },
           "author" : {
             "type" : "string",
