@@ -1,5 +1,6 @@
 package jp.falsystack.falsylog_backend.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,9 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
-import jp.falsystack.falsylog_backend.domain.PostHashTag;
+import jp.falsystack.falsylog_backend.repository.HashTagRepository;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +22,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,6 +33,8 @@ public class PostControllerTest {
   private ObjectMapper objectMapper;
   @Autowired
   private PostRepository postRepository;
+  @Autowired
+  private HashTagRepository hashTagRepository;
 
   private static Post createPostEntity(int count) {
     return Post.builder()
@@ -108,6 +109,14 @@ public class PostControllerTest {
             .content(json)
         ).andExpect(status().isOk())
         .andDo(print());
+
+    var hashTags = hashTagRepository.findAll();
+    assertThat(hashTags)
+        .hasSize(3)
+        .extracting("name")
+        .containsExactlyInAnyOrder(
+        "#spring", "#Spring", "#java"
+    );
   }
 
   @Test
@@ -134,7 +143,8 @@ public class PostControllerTest {
   @DisplayName("POST /post タイトルは２０文字以下で入力しないと記事登録に失敗する。")
   void postFail_Least_One_Word() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("1234567890,1234567890", "内容12345678", "作成者", null);
+    var request = createPostRequesOptionaltDto("1234567890,1234567890", "内容12345678", "作成者",
+        null);
     String json = objectMapper.writeValueAsString(request);
 
     // expected
