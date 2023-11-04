@@ -10,7 +10,6 @@ import org.springframework.validation.FieldError;
 
 /**
  * {
- *  "code": "400",
  *  "message": "잘못된 요청입니다.",
  *  "validation" : {
  *    "title": "1글자 입력해주세요."
@@ -21,7 +20,6 @@ import org.springframework.validation.FieldError;
 @Getter
 public class ErrorResponse {
 
-  private final String code;
   private final String message;
   private final Map<String, String> validation = new HashMap<>();
 
@@ -32,8 +30,7 @@ public class ErrorResponse {
   }
 
   @Builder
-  public ErrorResponse(String code, String message) {
-    this.code = code;
+  public ErrorResponse(String message) {
     this.message = message;
   }
 }

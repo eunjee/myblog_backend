@@ -15,7 +15,6 @@ public class ExceptionController {
   public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
 
     var errorResponse = ErrorResponse.builder()
-        .code("400")
         .message("間違ったリクエストです。")
         .build();
 

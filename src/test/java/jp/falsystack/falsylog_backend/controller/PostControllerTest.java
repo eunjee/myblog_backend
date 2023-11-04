@@ -132,7 +132,6 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.code", is("400")),
             jsonPath("$.message", is("間違ったリクエストです。")),
             jsonPath("$.validation.title", is("タイトルを入力してください。"))
         )
@@ -153,7 +152,6 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.code", is("400")),
             jsonPath("$.message", is("間違ったリクエストです。")),
             jsonPath("$.validation.title", is("タイトルは１文字以上２０文字以下で作成してください。"))
         )
@@ -173,7 +171,6 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.code", is("400")),
             jsonPath("$.message", is("間違ったリクエストです。")),
             jsonPath("$.validation.content", is("内容を入力してください。"))
         )
@@ -193,7 +190,6 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.code", is("400")),
             jsonPath("$.message", is("間違ったリクエストです。")),
             jsonPath("$.validation.content", is("１０文字以上作成してください。"))
         )
