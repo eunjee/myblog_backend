@@ -21,27 +21,27 @@
 
 ## commits
 ### 2023.10.16
-- [x] 記事作成APIの追加
+- [x] ポスト作成APIの追加
   - [x] 統合テスト
   - [x] Business Layerテスト
   - [x] Persistence Layerテスト
 ### 2023.10.20
 - [x] Spring Rest Docsの導入
-  - [x] 記事作成DOC Testを作成 (post-create)
-  - [x] 記事一覧DOC Testを作成 (post-list)
-  - [x] 記事一覧API作成
-  - [x] 記事一覧 Controller Test作成
-  - [x] 記事一覧 Service Test作成
+  - [x] ポスト作成DOC Testを作成 (post-create)
+  - [x] ポスト一覧DOC Testを作成 (post-list)
+  - [x] ポスト一覧API作成
+  - [x] ポスト一覧 Controller Test作成
+  - [x] ポスト一覧 Service Test作成
 ### 2023.10.21
-- [x] 記事詳細照会API作成
-  - [x] 記事詳細照会 統合テスト
-  - [x] 記事詳細照会 Serviceテスト
-  - [x] 記事詳細照会 Repositoryテスト
+- [x] ポスト詳細照会API作成
+  - [x] ポスト詳細照会 統合テスト
+  - [x] ポスト詳細照会 Serviceテスト
+  - [x] ポスト詳細照会 Repositoryテスト
 ### 2023.10.26
-- [x] 記事詳細照会DOCテスト作成 (getPost)
-- [x] 記事削除DOCテスト作成 (deletePost)
+- [x] ポスト詳細照会DOCテスト作成 (getPost)
+- [x] ポスト削除DOCテスト作成 (deletePost)
 ### 2023.10.27
-- [x] 記事登録にValidationをかける (post-create)
+- [x] ポスト登録にValidationをかける (post-create)
 - [x] Error専用レスポンスオブジェクトの生成
 - [x] Validationに対するテスト作成
 - [x] レスポンスに作成日,更新日追加
@@ -50,3 +50,6 @@
 - [x] レファレンス用資料であるBaseEntityのフィルドをビジニス用カラムと使用するのを廃止
 ### 2023.11.02
 - [x] HashTag機能追加
+### 2023.11.04
+- [x] ポスト登録時のエラレスポンスのAPIDocs作成
+- [x] クライアント要求によるエラレスポンスからcodeフィルドの削除
