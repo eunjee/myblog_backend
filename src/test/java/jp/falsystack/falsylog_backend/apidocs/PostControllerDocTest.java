@@ -27,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,16 @@ public class PostControllerDocTest {
         .title("記事タイトル" + count)
         .content("コンテンツ" + count)
         .author("falsystack" + count)
+        .build();
+  }
+
+  private static PostCreate createPostRequesOptionaltDto(String title, String content,
+      String author, String hashTags) {
+    return PostCreate.builder()
+        .title(title)
+        .content(content)
+        .author(author)
+        .hashTags(hashTags)
         .build();
   }
 
@@ -100,7 +111,50 @@ public class PostControllerDocTest {
             )
         )
         .andDo(print());
+  }
 
+  @Test
+  @DisplayName("POST /post ポスト登録失敗 - 必須")
+  void postCreateFailedRequired() throws Exception {
+    // given
+    var request = createPostRequesOptionaltDto(null, null, "作成者", null);
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andDo(document("post-create-fail-required",
+            responseFields(
+                fieldWithPath("message").type(STRING).description("間違ったリクエストです。"),
+                fieldWithPath("validation.title").type(STRING)
+                    .description("タイトルを入力してください。"),
+                fieldWithPath("validation.content").type(STRING)
+                    .description("内容を入力してください。")
+            )))
+        .andDo(print());
+  }
+
+  @Test
+  @DisplayName("POST /post ポスト登録失敗 - 文字数制限")
+  void postCreateFailedTitle2() throws Exception {
+    // given
+    var request = createPostRequesOptionaltDto("", "内容1234", "作成者", null);
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andDo(document("post-create-fail-length",
+            responseFields(
+                fieldWithPath("message").type(STRING).description("間違ったリクエストです。"),
+                fieldWithPath("validation.title").type(STRING)
+                    .description("タイトルは１文字以上２０文字以下で作成してください"),
+                fieldWithPath("validation.content").type(STRING)
+                    .description("１０文字以上作成してください。")
+            )))
+        .andDo(print());
   }
 
   @Test
