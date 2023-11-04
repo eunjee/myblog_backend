@@ -23,6 +23,12 @@
               "examples" : {
                 "post-create" : {
                   "value" : "{\"title\":\"ポストータイトル(포스트 타이틀)\",\"content\":\"ポスト内容(포스트 내용)\",\"author\":\"作成者(작성자)\",\"hashTags\":\"ハッシュタグ(해시태그)\"}"
+                },
+                "post-create-fail-length" : {
+                  "value" : "{\"title\":\"\",\"content\":\"内容1234\",\"author\":\"作成者\",\"hashTags\":null}"
+                },
+                "post-create-fail-required" : {
+                  "value" : "{\"title\":null,\"content\":null,\"author\":\"作成者\",\"hashTags\":null}"
                 }
               }
             }
@@ -31,6 +37,24 @@
         "responses" : {
           "200" : {
             "description" : "200"
+          },
+          "400" : {
+            "description" : "400",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/post503584202"
+                },
+                "examples" : {
+                  "post-create-fail-length" : {
+                    "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルは１文字以上２０文字以下で作成してください。\",\"content\":\"１０文字以上作成してください。\"}}"
+                  },
+                  "post-create-fail-required" : {
+                    "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルを入力してください。\",\"content\":\"内容を入力してください。\"}}"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -58,7 +82,7 @@
                 },
                 "examples" : {
                   "post-detail" : {
-                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[{\"createdAt\":\"2023-11-03T16:06:36.330795\",\"updatedAt\":\"2023-11-03T16:06:36.330795\",\"name\":\"#Spring\"},{\"createdAt\":\"2023-11-03T16:06:36.333026\",\"updatedAt\":\"2023-11-03T16:06:36.333026\",\"name\":\"#Java\"},{\"createdAt\":\"2023-11-03T16:06:36.333849\",\"updatedAt\":\"2023-11-03T16:06:36.333849\",\"name\":\"#Javascript\"}],\"createdAt\":\"2023-11-03T16:06:36.310959\",\"updatedAt\":\"2023-11-03T16:06:36.310959\"}"
+                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[{\"createdAt\":\"2023-11-04T19:07:26.423851\",\"updatedAt\":\"2023-11-04T19:07:26.423851\",\"name\":\"#Spring\"},{\"createdAt\":\"2023-11-04T19:07:26.426098\",\"updatedAt\":\"2023-11-04T19:07:26.426098\",\"name\":\"#Java\"},{\"createdAt\":\"2023-11-04T19:07:26.426922\",\"updatedAt\":\"2023-11-04T19:07:26.426922\",\"name\":\"#Javascript\"}],\"createdAt\":\"2023-11-04T19:07:26.401912\",\"updatedAt\":\"2023-11-04T19:07:26.401912\"}"
                   }
                 }
               }
@@ -99,7 +123,7 @@
                 },
                 "examples" : {
                   "post-list" : {
-                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-03T16:06:36.778367\",\"updatedAt\":\"2023-11-03T16:06:36.778367\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-03T16:06:36.779046\",\"updatedAt\":\"2023-11-03T16:06:36.779046\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-03T16:06:36.779476\",\"updatedAt\":\"2023-11-03T16:06:36.779476\"}]"
+                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:26.92356\",\"updatedAt\":\"2023-11-04T19:07:26.92356\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:26.924894\",\"updatedAt\":\"2023-11-04T19:07:26.924894\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:26.925324\",\"updatedAt\":\"2023-11-04T19:07:26.925324\"}]"
                   }
                 }
               }
@@ -111,27 +135,6 @@
   },
   "components" : {
     "schemas" : {
-      "post837337146" : {
-        "type" : "object",
-        "properties" : {
-          "hashTags" : {
-            "type" : "string",
-            "description" : "#Spring#Java#Javascript"
-          },
-          "author" : {
-            "type" : "string",
-            "description" : "作成者(작성자)"
-          },
-          "title" : {
-            "type" : "string",
-            "description" : "タイトル(타이틀)"
-          },
-          "content" : {
-            "type" : "string",
-            "description" : "コンテンツ(컨텐츠)"
-          }
-        }
-      },
       "posts1518091262" : {
         "type" : "array",
         "items" : {
@@ -161,6 +164,27 @@
               "type" : "string",
               "description" : "更新日(갱신일)"
             }
+          }
+        }
+      },
+      "post837337146" : {
+        "type" : "object",
+        "properties" : {
+          "hashTags" : {
+            "type" : "string",
+            "description" : "#Spring#Java#Javascript"
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "作成者(작성자)"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "タイトル(타이틀)"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "コンテンツ(컨텐츠)"
           }
         }
       },
@@ -202,6 +226,28 @@
           "updatedAt" : {
             "type" : "string",
             "description" : "更新日(갱신일)"
+          }
+        }
+      },
+      "post503584202" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "間違ったリクエストです。"
+          },
+          "validation" : {
+            "type" : "object",
+            "properties" : {
+              "title" : {
+                "type" : "string",
+                "description" : "タイトルを入力してください。"
+              },
+              "content" : {
+                "type" : "string",
+                "description" : "内容を入力してください。"
+              }
+            }
           }
         }
       }
