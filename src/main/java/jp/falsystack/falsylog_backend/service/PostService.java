@@ -3,6 +3,7 @@ package jp.falsystack.falsylog_backend.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.PostHashTag;
@@ -29,7 +30,29 @@ public class PostService {
     var post = Post.from(postWrite);
 
     if (StringUtils.hasText(postWrite.getHashTags())) {
-      post.addPostHashTags(postWrite.getHashTags());
+      var postHashTags = new ArrayList<PostHashTag>();
+      var pattern = Pattern.compile("#([0-9a-zA-Z가-힣ぁ-んァ-ヶー一-龯]*)");
+      var matcher = pattern.matcher(postWrite.getHashTags());
+
+      while (matcher.find()) {
+        var hashTag = hashTagRepository.findByName(matcher.group()).orElseThrow(
+            () -> new IllegalArgumentException("해시태그가 없습니다.")
+        );
+        if (hashTag == null) {
+          hashTag = HashTag.builder()
+              .name(matcher.group())
+              .build();
+        }
+
+        var postHashTag = PostHashTag.builder()
+            .post(post)
+            .hashTag(hashTag)
+            .build();
+
+        postHashTags.add(postHashTag);
+
+      }
+      post.addPostHashTags(postHashTags);
     }
     postRepository.save(post);
   }

@@ -10,7 +10,6 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -49,24 +48,7 @@ public class Post extends BaseEntity {
         .build();
   }
 
-  public void addPostHashTags(String postHashTags) {
-    var tags = new ArrayList<PostHashTag>();
-    var pattern = Pattern.compile("#([0-9a-zA-Z가-힣ぁ-んァ-ヶー一-龯]*)");
-    var matcher = pattern.matcher(postHashTags);
-
-    while (matcher.find()) {
-      var hashTag = HashTag.builder()
-          .name(matcher.group())
-          .build();
-
-      var postHashTag = PostHashTag.builder()
-          .post(this)
-          .hashTag(hashTag)
-          .build();
-
-      tags.add(postHashTag);
-
-    }
-    this.postHashTags.addAll(tags);
+  public void addPostHashTags(List<PostHashTag> postHashTags) {
+    this.postHashTags.addAll(postHashTags);
   }
 }
