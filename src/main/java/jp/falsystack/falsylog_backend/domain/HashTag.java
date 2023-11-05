@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,16 +26,17 @@ public class HashTag extends BaseEntity {
   @Column(name = "tag_id")
   private Long id;
 
-  @Getter
-
   private String name;
 
   @OneToMany(mappedBy = "hashTag", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<PostHashTag> postHashTags = new ArrayList<>();
+  private final List<PostHashTag> postHashTags = new ArrayList<>();
 
   @Builder
-  public HashTag(String name, List<PostHashTag> postHashTags) {
+  public HashTag(String name) {
     this.name = name;
-    this.postHashTags = postHashTags;
+  }
+
+  public void addPostHashTags(List<PostHashTag> postHashTags) {
+    this.postHashTags.addAll(postHashTags);
   }
 }
