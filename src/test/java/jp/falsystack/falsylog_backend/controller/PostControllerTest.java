@@ -10,7 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
+import jp.falsystack.falsylog_backend.domain.PostHashTag;
 import jp.falsystack.falsylog_backend.repository.HashTagRepository;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
@@ -50,8 +52,20 @@ public class PostControllerTest {
         .content("コンテンツ1234" + count)
         .author("falsystack" + count)
         .build();
-    post.addPostHashTags("#Spring#Java#Javascript");
     return post;
+  }
+
+  private static PostHashTag createPostHashTag(HashTag hashTag, Post post) {
+    return PostHashTag.builder()
+        .hashTag(hashTag)
+        .post(post)
+        .build();
+  }
+
+  private static HashTag createHashTag(String name) {
+    return HashTag.builder()
+        .name(name)
+        .build();
   }
 
   private static PostCreate createPostRequestDto(int count) {
@@ -219,6 +233,10 @@ public class PostControllerTest {
   void getPostWithHashTags() throws Exception {
     // given
     var post = createPostEntityOptional(0);
+    var hashTag = createHashTag("#Spring");
+    var postHashTag = createPostHashTag(hashTag, post);
+    post.addPostHashTags(List.of(postHashTag));
+    hashTag.addPostHashTags(List.of(postHashTag));
     var savedPost = postRepository.save(post);
 
     // expected

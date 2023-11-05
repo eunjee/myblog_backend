@@ -47,7 +47,7 @@
                 },
                 "examples" : {
                   "post-create-fail-length" : {
-                    "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルは１文字以上２０文字以下で作成してください。\",\"content\":\"１０文字以上作成してください。\"}}"
+                    "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルを入力してください。\",\"content\":\"１０文字以上作成してください。\"}}"
                   },
                   "post-create-fail-required" : {
                     "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルを入力してください。\",\"content\":\"内容を入力してください。\"}}"
@@ -82,7 +82,7 @@
                 },
                 "examples" : {
                   "post-detail" : {
-                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[{\"createdAt\":\"2023-11-04T19:07:26.423851\",\"updatedAt\":\"2023-11-04T19:07:26.423851\",\"name\":\"#Spring\"},{\"createdAt\":\"2023-11-04T19:07:26.426098\",\"updatedAt\":\"2023-11-04T19:07:26.426098\",\"name\":\"#Java\"},{\"createdAt\":\"2023-11-04T19:07:26.426922\",\"updatedAt\":\"2023-11-04T19:07:26.426922\",\"name\":\"#Javascript\"}],\"createdAt\":\"2023-11-04T19:07:26.401912\",\"updatedAt\":\"2023-11-04T19:07:26.401912\"}"
+                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[{\"createdAt\":\"2023-11-04T19:07:32.856185\",\"updatedAt\":\"2023-11-04T19:07:32.856185\",\"name\":\"#Spring\"},{\"createdAt\":\"2023-11-04T19:07:32.85837\",\"updatedAt\":\"2023-11-04T19:07:32.85837\",\"name\":\"#Java\"},{\"createdAt\":\"2023-11-04T19:07:32.859147\",\"updatedAt\":\"2023-11-04T19:07:32.859147\",\"name\":\"#Javascript\"}],\"createdAt\":\"2023-11-04T19:07:32.834746\",\"updatedAt\":\"2023-11-04T19:07:32.834746\"}"
                   }
                 }
               }
@@ -123,7 +123,7 @@
                 },
                 "examples" : {
                   "post-list" : {
-                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:26.92356\",\"updatedAt\":\"2023-11-04T19:07:26.92356\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:26.924894\",\"updatedAt\":\"2023-11-04T19:07:26.924894\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:26.925324\",\"updatedAt\":\"2023-11-04T19:07:26.925324\"}]"
+                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:33.33999\",\"updatedAt\":\"2023-11-04T19:07:33.33999\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:33.340668\",\"updatedAt\":\"2023-11-04T19:07:33.340668\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:33.3414\",\"updatedAt\":\"2023-11-04T19:07:33.3414\"}]"
                   }
                 }
               }
@@ -135,6 +135,27 @@
   },
   "components" : {
     "schemas" : {
+      "post837337146" : {
+        "type" : "object",
+        "properties" : {
+          "hashTags" : {
+            "type" : "string",
+            "description" : "#Spring#Java#Javascript"
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "作成者(작성자)"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "タイトル(타이틀)"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "コンテンツ(컨텐츠)"
+          }
+        }
+      },
       "posts1518091262" : {
         "type" : "array",
         "items" : {
@@ -164,27 +185,6 @@
               "type" : "string",
               "description" : "更新日(갱신일)"
             }
-          }
-        }
-      },
-      "post837337146" : {
-        "type" : "object",
-        "properties" : {
-          "hashTags" : {
-            "type" : "string",
-            "description" : "#Spring#Java#Javascript"
-          },
-          "author" : {
-            "type" : "string",
-            "description" : "作成者(작성자)"
-          },
-          "title" : {
-            "type" : "string",
-            "description" : "タイトル(타이틀)"
-          },
-          "content" : {
-            "type" : "string",
-            "description" : "コンテンツ(컨텐츠)"
           }
         }
       },

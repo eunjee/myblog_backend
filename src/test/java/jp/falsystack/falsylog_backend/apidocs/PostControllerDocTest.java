@@ -69,7 +69,6 @@ public class PostControllerDocTest {
         .content("コンテンツ1234" + count)
         .author("falsystack" + count)
         .build();
-    post.addPostHashTags("#Spring#Java#Javascript");
     return post;
   }
 
