@@ -168,19 +168,19 @@ public class PostControllerDocTest {
             .contentType(APPLICATION_JSON))
         .andDo(document("post-detail",
             RequestDocumentation.pathParameters(
-                RequestDocumentation.parameterWithName("postId").description("ポストID(게시글ID)")
+                RequestDocumentation.parameterWithName("postId").description("게시글ID") // ポストID
             ),
             responseFields(
                 fieldWithPath("id").type(NUMBER).description("ID"),
-                fieldWithPath("title").type(STRING).description("タイトル(타이틀)"),
-                fieldWithPath("content").type(STRING).description("コンテンツ(컨텐츠)"),
-                fieldWithPath("author").type(STRING).description("作成者(작성자)"),
-                fieldWithPath("hashTags[].name").type(STRING).description("タグネーム(태그이름)"),
-                fieldWithPath("hashTags[].createdAt").type(STRING).description("createdAt").optional().ignored(),
-                fieldWithPath("hashTags[].updatedAt").type(STRING).description("updatedAt").optional().ignored(),
-                fieldWithPath("hashTags[].name").type(STRING).description("タグネーム(태그이름)"),
-                fieldWithPath("createdAt").type(STRING).description("作成日(작성일)"),
-                fieldWithPath("updatedAt").type(STRING).description("更新日(갱신일)")
+                fieldWithPath("title").type(STRING).description("타이틀"), // タイトル
+                fieldWithPath("content").type(STRING).description("컨텐츠"), // コンテンツ
+                fieldWithPath("author").type(STRING).description("작성자"), // 作成者
+                fieldWithPath("hashTags.[]").type(ARRAY).description("hashtag array"),
+                fieldWithPath("hashTags[].name").type(STRING).description("태그이름").optional(), // hash tag name
+                fieldWithPath("hashTags[].createdAt").type(STRING).description("createdAt").optional().ignored(), // 作成日
+                fieldWithPath("hashTags[].updatedAt").type(STRING).description("updatedAt").optional().ignored(), // 更新日
+                fieldWithPath("createdAt").type(STRING).description("작성일"), // 作成日
+                fieldWithPath("updatedAt").type(STRING).description("갱신일") // 更新日
             )
         ))
         .andDo(print());

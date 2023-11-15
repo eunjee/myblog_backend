@@ -1,5 +1,6 @@
 package jp.falsystack.falsylog_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HashTag extends BaseEntity {
+public class HashTag {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,8 @@ public class HashTag extends BaseEntity {
 
   private String name;
 
-  @OneToMany(mappedBy = "hashTag", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonBackReference
+  @OneToMany(mappedBy = "hashTag", cascade = CascadeType.ALL)
   private final List<PostHashTag> postHashTags = new ArrayList<>();
 
   @Builder

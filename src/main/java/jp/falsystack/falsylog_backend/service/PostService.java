@@ -35,14 +35,9 @@ public class PostService {
       var matcher = pattern.matcher(postWrite.getHashTags());
 
       while (matcher.find()) {
-        var hashTag = hashTagRepository.findByName(matcher.group()).orElseThrow(
-            () -> new IllegalArgumentException("해시태그가 없습니다.")
-        );
-        if (hashTag == null) {
-          hashTag = HashTag.builder()
-              .name(matcher.group())
-              .build();
-        }
+        var hashTag = hashTagRepository.findByName(matcher.group()).orElse(HashTag.builder()
+            .name(matcher.group())
+            .build());
 
         var postHashTag = PostHashTag.builder()
             .post(post)

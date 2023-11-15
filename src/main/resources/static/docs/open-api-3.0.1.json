@@ -47,7 +47,7 @@
                 },
                 "examples" : {
                   "post-create-fail-length" : {
-                    "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルを入力してください。\",\"content\":\"１０文字以上作成してください。\"}}"
+                    "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルは１文字以上２０文字以下で作成してください。\",\"content\":\"１０文字以上作成してください。\"}}"
                   },
                   "post-create-fail-required" : {
                     "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルを入力してください。\",\"content\":\"内容を入力してください。\"}}"
@@ -66,7 +66,7 @@
         "parameters" : [ {
           "name" : "postId",
           "in" : "path",
-          "description" : "ポストID(게시글ID)",
+          "description" : "게시글ID",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -78,11 +78,11 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/post-postId594669988"
+                  "$ref" : "#/components/schemas/post-postId139090657"
                 },
                 "examples" : {
                   "post-detail" : {
-                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[{\"createdAt\":\"2023-11-04T19:07:32.856185\",\"updatedAt\":\"2023-11-04T19:07:32.856185\",\"name\":\"#Spring\"},{\"createdAt\":\"2023-11-04T19:07:32.85837\",\"updatedAt\":\"2023-11-04T19:07:32.85837\",\"name\":\"#Java\"},{\"createdAt\":\"2023-11-04T19:07:32.859147\",\"updatedAt\":\"2023-11-04T19:07:32.859147\",\"name\":\"#Javascript\"}],\"createdAt\":\"2023-11-04T19:07:32.834746\",\"updatedAt\":\"2023-11-04T19:07:32.834746\"}"
+                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[],\"createdAt\":\"2023-11-15T20:53:55.223897\",\"updatedAt\":\"2023-11-15T20:53:55.223897\"}"
                   }
                 }
               }
@@ -123,7 +123,7 @@
                 },
                 "examples" : {
                   "post-list" : {
-                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:33.33999\",\"updatedAt\":\"2023-11-04T19:07:33.33999\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:33.340668\",\"updatedAt\":\"2023-11-04T19:07:33.340668\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-04T19:07:33.3414\",\"updatedAt\":\"2023-11-04T19:07:33.3414\"}]"
+                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:53:55.708665\",\"updatedAt\":\"2023-11-15T20:53:55.708665\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:53:55.70934\",\"updatedAt\":\"2023-11-15T20:53:55.70934\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:53:55.709751\",\"updatedAt\":\"2023-11-15T20:53:55.709751\"}]"
                   }
                 }
               }
@@ -135,27 +135,6 @@
   },
   "components" : {
     "schemas" : {
-      "post837337146" : {
-        "type" : "object",
-        "properties" : {
-          "hashTags" : {
-            "type" : "string",
-            "description" : "#Spring#Java#Javascript"
-          },
-          "author" : {
-            "type" : "string",
-            "description" : "作成者(작성자)"
-          },
-          "title" : {
-            "type" : "string",
-            "description" : "タイトル(타이틀)"
-          },
-          "content" : {
-            "type" : "string",
-            "description" : "コンテンツ(컨텐츠)"
-          }
-        }
-      },
       "posts1518091262" : {
         "type" : "array",
         "items" : {
@@ -188,32 +167,16 @@
           }
         }
       },
-      "post-postId594669988" : {
+      "post837337146" : {
         "type" : "object",
         "properties" : {
-          "createdAt" : {
-            "type" : "string",
-            "description" : "作成日(작성일)"
-          },
           "hashTags" : {
-            "type" : "array",
-            "items" : {
-              "type" : "object",
-              "properties" : {
-                "name" : {
-                  "type" : "string",
-                  "description" : "タグネーム(태그이름)"
-                }
-              }
-            }
+            "type" : "string",
+            "description" : "#Spring#Java#Javascript"
           },
           "author" : {
             "type" : "string",
             "description" : "作成者(작성자)"
-          },
-          "id" : {
-            "type" : "number",
-            "description" : "ID"
           },
           "title" : {
             "type" : "string",
@@ -222,10 +185,48 @@
           "content" : {
             "type" : "string",
             "description" : "コンテンツ(컨텐츠)"
+          }
+        }
+      },
+      "post-postId139090657" : {
+        "type" : "object",
+        "properties" : {
+          "createdAt" : {
+            "type" : "string",
+            "description" : "작성일"
+          },
+          "hashTags" : {
+            "type" : "array",
+            "description" : "hashtag array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "name" : {
+                  "type" : "string",
+                  "description" : "태그이름"
+                }
+              }
+            }
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "작성자"
+          },
+          "id" : {
+            "type" : "number",
+            "description" : "ID"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "타이틀"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "컨텐츠"
           },
           "updatedAt" : {
             "type" : "string",
-            "description" : "更新日(갱신일)"
+            "description" : "갱신일"
           }
         }
       },
