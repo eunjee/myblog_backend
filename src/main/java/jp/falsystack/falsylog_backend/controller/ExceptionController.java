@@ -1,7 +1,9 @@
 package jp.falsystack.falsylog_backend.controller;
 
+import jp.falsystack.falsylog_backend.exception.MyBlogException;
 import jp.falsystack.falsylog_backend.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -15,11 +17,24 @@ public class ExceptionController {
   public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
 
     var errorResponse = ErrorResponse.builder()
-        .message("間違ったリクエストです。")
+        .message("잘못된 요청입니다.") // 間違ったリクエストです。
         .build();
 
-    errorResponse.addValidation(e.getFieldErrors());
+    errorResponse.addValidationList(e.getFieldErrors());
 
     return errorResponse;
+  }
+
+  @ExceptionHandler(MyBlogException.class)
+  public ResponseEntity<ErrorResponse> myblogExceptionHandler(MyBlogException e) {
+
+    var errorResponse = ErrorResponse.builder()
+        .message(e.getMessage())
+        .validation(e.getValidation())
+        .build();
+
+    return ResponseEntity
+        .status(e.getStatusCode())
+        .body(errorResponse);
   }
 }

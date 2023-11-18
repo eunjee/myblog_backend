@@ -21,16 +21,21 @@ import org.springframework.validation.FieldError;
 public class ErrorResponse {
 
   private final String message;
-  private final Map<String, String> validation = new HashMap<>();
+  private final Map<String, String> validation;
 
-  public void addValidation(List<FieldError> fieldErrors) {
+  public void addValidationList(List<FieldError> fieldErrors) {
     for (FieldError fieldError : fieldErrors) {
       this.validation.put(fieldError.getField(), fieldError.getDefaultMessage());
     }
   }
 
+  public void addValidation(String fieldName, String message) {
+    this.validation.put(fieldName, message);
+  }
+
   @Builder
-  public ErrorResponse(String message) {
+  public ErrorResponse(String message, Map<String, String> validation) {
     this.message = message;
+    this.validation = validation == null ? new HashMap<>() : validation;
   }
 }

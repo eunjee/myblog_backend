@@ -1,6 +1,7 @@
 package jp.falsystack.falsylog_backend.service;
 
 import java.util.List;
+import jp.falsystack.falsylog_backend.exception.TagNotFound;
 import jp.falsystack.falsylog_backend.repository.HashTagRepository;
 import jp.falsystack.falsylog_backend.response.TagPostResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class HashTagService {
 
   public List<TagPostResponse> getPosts(String tagName) {
     var hashTag = hashTagRepository.findByName("#" + tagName)
-        .orElseThrow(() -> new IllegalArgumentException("해시태그가 없습니다."));
+        .orElseThrow(TagNotFound::new);
     var postHashTags = hashTag.getPostHashTags();
 
     return postHashTags.stream().map(postHashTag ->
