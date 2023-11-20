@@ -5,11 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import jp.falsystack.falsylog_backend.domain.Post;
+import jp.falsystack.falsylog_backend.exception.PostNotFound;
 import jp.falsystack.falsylog_backend.repository.HashTagRepository;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
+import jp.falsystack.falsylog_backend.request.PostSearch;
 import jp.falsystack.falsylog_backend.response.PostResponse;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import org.junit.jupiter.api.BeforeEach;
@@ -118,8 +119,8 @@ class PostServiceTest {
 
     // expected
     assertThatThrownBy(() -> postService.getPost(postId))
-        .isInstanceOf(NoSuchElementException.class)
-        .hasMessage("Userがないです。");
+        .isInstanceOf(PostNotFound.class)
+        .hasMessage("찾으시는 게시글이 없습니다.");
   }
 
   @Test
@@ -132,7 +133,7 @@ class PostServiceTest {
     postRepository.saveAll(List.of(postDto1, postDto2, postDto3));
 
     // when
-    var posts = postService.getPosts();
+    var posts = postService.getPosts(new PostSearch());
 
     // then
     assertThat(posts.get(0)).isInstanceOf(PostResponse.class);

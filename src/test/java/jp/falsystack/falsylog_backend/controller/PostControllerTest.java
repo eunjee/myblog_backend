@@ -146,8 +146,8 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.message", is("間違ったリクエストです。")),
-            jsonPath("$.validation.title", is("タイトルを入力してください。"))
+            jsonPath("$.message", is("잘못된 요청입니다.")),
+            jsonPath("$.validation.title", is("타이틀을 입력해주세요"))
         )
         .andDo(print());
   }
@@ -166,8 +166,8 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.message", is("間違ったリクエストです。")),
-            jsonPath("$.validation.title", is("タイトルは１文字以上２０文字以下で作成してください。"))
+            jsonPath("$.message", is("잘못된 요청입니다.")),
+            jsonPath("$.validation.title", is("타이틀은 한 글자 이상 20 자 이하로 작성해 주세요"))
         )
         .andDo(print());
   }
@@ -185,8 +185,8 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.message", is("間違ったリクエストです。")),
-            jsonPath("$.validation.content", is("内容を入力してください。"))
+            jsonPath("$.message", is("잘못된 요청입니다.")),
+            jsonPath("$.validation.content", is("내용을 입력해주세요"))
         )
         .andDo(print());
   }
@@ -204,8 +204,8 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.message", is("間違ったリクエストです。")),
-            jsonPath("$.validation.content", is("１０文字以上作成してください。"))
+            jsonPath("$.message", is("잘못된 요청입니다.")),
+            jsonPath("$.validation.content", is("10글자 이상 입력해주세요"))
         )
         .andDo(print());
   }
@@ -281,9 +281,9 @@ public class PostControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()", is(3)))
         .andExpectAll(
-            jsonPath("$[0].title", is("記事タイトル1")),
-            jsonPath("$[0].content", is("コンテンツ12341")),
-            jsonPath("$[0].author", is("falsystack1"))
+            jsonPath("$[0].title", is("記事タイトル3")),
+            jsonPath("$[0].content", is("コンテンツ12343")),
+            jsonPath("$[0].author", is("falsystack3"))
         )
         .andDo(print());
   }

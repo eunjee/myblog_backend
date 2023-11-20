@@ -9,6 +9,7 @@ import jp.falsystack.falsylog_backend.domain.PostHashTag;
 import jp.falsystack.falsylog_backend.exception.PostNotFound;
 import jp.falsystack.falsylog_backend.repository.HashTagRepository;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
+import jp.falsystack.falsylog_backend.request.PostSearch;
 import jp.falsystack.falsylog_backend.response.PostResponse;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +53,11 @@ public class PostService {
     postRepository.save(post);
   }
 
-  public List<PostResponse> getPosts() {
-    return postRepository.findAll().stream()
-        .map(PostResponse::from).toList();
+  public List<PostResponse> getPosts(PostSearch postSearch) {
+    return postRepository.getList(postSearch)
+        .stream()
+        .map(PostResponse::from)
+        .toList();
   }
 
   @Transactional

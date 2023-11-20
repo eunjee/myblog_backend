@@ -1,4 +1,7 @@
-# falsylog_backend
+# myblog_backend
+
+- myblog_frontend
+  -  https://github.com/hjyang369/my-blog
 
 ## 技術スタック
 - Java
@@ -59,3 +62,9 @@
 - [x] Hashタグをクリックすると関連ポストと格ポストに関連付けられたハッシュタグも一緒に返す。
 ### 2023.11.19
 - [x] システム全体例外追加、PostNotFound, TagNotFound例外追加
+### 2023.11.20
+- [x] paging追加
+  - フロントからの要求事項
+    - `size=5`, ページ番号は１からスタート
+- [x] apiの返り値の言語は基本韓国語に変更
+  - フロントからの要求事項

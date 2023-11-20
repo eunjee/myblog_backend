@@ -9,29 +9,31 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Getter
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = {@UniqueConstraint(name = "unique_name", columnNames = {"name"})})
 public class HashTag {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "tag_id")
-  private Long id;
-
-  private String name;
 
   @JsonBackReference
   @OneToMany(mappedBy = "hashTag", cascade = CascadeType.ALL)
   private final List<PostHashTag> postHashTags = new ArrayList<>();
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "tag_id")
+  private Long id;
+  private String name;
 
   @Builder
   public HashTag(String name) {

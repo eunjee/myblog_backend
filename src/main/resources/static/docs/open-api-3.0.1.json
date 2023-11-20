@@ -47,7 +47,7 @@
                 },
                 "examples" : {
                   "post-create-fail-length" : {
-                    "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルは１文字以上２０文字以下で作成してください。\",\"content\":\"１０文字以上作成してください。\"}}"
+                    "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルを入力してください。\",\"content\":\"１０文字以上作成してください。\"}}"
                   },
                   "post-create-fail-required" : {
                     "value" : "{\"message\":\"間違ったリクエストです。\",\"validation\":{\"title\":\"タイトルを入力してください。\",\"content\":\"内容を入力してください。\"}}"
@@ -82,7 +82,7 @@
                 },
                 "examples" : {
                   "post-detail" : {
-                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[],\"createdAt\":\"2023-11-15T20:53:55.223897\",\"updatedAt\":\"2023-11-15T20:53:55.223897\"}"
+                    "value" : "{\"id\":1,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ12341\",\"author\":\"falsystack1\",\"hashTags\":[],\"createdAt\":\"2023-11-15T20:56:23.733986\",\"updatedAt\":\"2023-11-15T20:56:23.733986\"}"
                   }
                 }
               }
@@ -123,7 +123,7 @@
                 },
                 "examples" : {
                   "post-list" : {
-                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:53:55.708665\",\"updatedAt\":\"2023-11-15T20:53:55.708665\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:53:55.70934\",\"updatedAt\":\"2023-11-15T20:53:55.70934\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:53:55.709751\",\"updatedAt\":\"2023-11-15T20:53:55.709751\"}]"
+                    "value" : "[{\"id\":4,\"title\":\"記事タイトル1\",\"content\":\"コンテンツ1\",\"author\":\"falsystack1\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:56:24.226133\",\"updatedAt\":\"2023-11-15T20:56:24.226133\"},{\"id\":5,\"title\":\"記事タイトル2\",\"content\":\"コンテンツ2\",\"author\":\"falsystack2\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:56:24.227033\",\"updatedAt\":\"2023-11-15T20:56:24.227033\"},{\"id\":6,\"title\":\"記事タイトル3\",\"content\":\"コンテンツ3\",\"author\":\"falsystack3\",\"hashTags\":null,\"createdAt\":\"2023-11-15T20:56:24.227659\",\"updatedAt\":\"2023-11-15T20:56:24.227659\"}]"
                   }
                 }
               }
