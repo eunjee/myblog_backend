@@ -20,7 +20,7 @@ public abstract class MyBlogException extends RuntimeException{
     super(message, cause);
   }
 
-  public void addValidation(List<FieldError> fieldErrors) {
+  public void addEachValidation(List<FieldError> fieldErrors) {
     for (FieldError fieldError : fieldErrors) {
       this.validation.put(fieldError.getField(), fieldError.getDefaultMessage());
     }

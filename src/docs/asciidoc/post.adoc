@@ -1,0 +1,21 @@
+= myblog API
+:doctype: book
+:toc: left
+:prettify-theme:
+
+== 포스트 1건 조회(ポスト一件照会)
+=== Request
+==== http
+include::{snippets}/post-detail/http-request.adoc[]
+==== request param
+include::{snippets}/post-detail/path-parameters.adoc[]
+==== request body
+include::{snippets}/post-detail/request-body.adoc[]
+
+=== Response
+==== http
+include::{snippets}/post-detail/http-response.adoc[]
+==== response body
+include::{snippets}/post-detail/response-body.adoc[]
+==== response fields
+include::{snippets}/post-detail/response-fields.adoc[]

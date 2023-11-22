@@ -6,7 +6,7 @@ package jp.falsystack.falsylog_backend.exception;
  */
 public class PostNotFound extends MyBlogException {
 
-  private static final String MESSAGE = "찾으시는 게시글이 없습니다.";
+  private static final String MESSAGE = "찾으시는 게시글이 없습니다."; // お探しの記事がないです。
 
   public PostNotFound() {
     super(MESSAGE);

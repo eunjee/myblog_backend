@@ -26,7 +26,7 @@ public class ExceptionController {
   }
 
   @ExceptionHandler(MyBlogException.class)
-  public ResponseEntity<ErrorResponse> myblogExceptionHandler(MyBlogException e) {
+  public ResponseEntity<ErrorResponse> myBlogExceptionHandler(MyBlogException e) {
 
     var errorResponse = ErrorResponse.builder()
         .message(e.getMessage())

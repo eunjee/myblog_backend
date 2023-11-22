@@ -120,7 +120,7 @@ class PostServiceTest {
     // expected
     assertThatThrownBy(() -> postService.getPost(postId))
         .isInstanceOf(PostNotFound.class)
-        .hasMessage("찾으시는 게시글이 없습니다.");
+        .hasMessage("찾으시는 게시글이 없습니다."); // お探しの記事がないです。
   }
 
   @Test
