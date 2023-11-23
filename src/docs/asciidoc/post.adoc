@@ -1,7 +1,11 @@
 = myblog API
 :doctype: book
 :toc: left
+:toclevels: 3
 :prettify-theme:
+:icons: font
+:sectlinks:
+
 
 == 포스트 1건 조회(ポスト一件照会)
 === Request

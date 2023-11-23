@@ -70,3 +70,6 @@
   - フロントからの要求事項
 ### 2023.11.22
 - [x] swagger -> asciidoc
+### 2023.11.23
+- [x] Snippet Custom 適用
+- [x] aws ec2 deploy

@@ -5,6 +5,9 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
@@ -18,6 +21,7 @@ import java.util.List;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.repository.PostRepository;
 import jp.falsystack.falsylog_backend.request.PostCreate;
+import jp.falsystack.falsylog_backend.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,12 +33,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.request.RequestDocumentation;
+import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "falsystack.jp", uriPort = 8080)
 @ExtendWith(RestDocumentationExtension.class)
 public class PostControllerDocTest {
 
@@ -44,6 +49,8 @@ public class PostControllerDocTest {
   private ObjectMapper objectMapper;
   @Autowired
   private PostRepository postRepository;
+  @Autowired
+  private PostService postService;
 
   private static Post createPostDto(int count) {
     return Post.builder()
@@ -167,18 +174,18 @@ public class PostControllerDocTest {
     mockMvc.perform(get("/post/{postId}", savedPost.getId())
             .contentType(APPLICATION_JSON))
         .andDo(document("post-detail",
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
             RequestDocumentation.pathParameters(
                 RequestDocumentation.parameterWithName("postId").description("게시글ID") // ポストID
             ),
             responseFields(
-                fieldWithPath("id").type(NUMBER).description("ID"),
+                fieldWithPath("id").type(NUMBER).description("ID").attributes(Attributes.key("constraint").value("필수필수")),
                 fieldWithPath("title").type(STRING).description("타이틀"), // タイトル
                 fieldWithPath("content").type(STRING).description("컨텐츠"), // コンテンツ
                 fieldWithPath("author").type(STRING).description("작성자"), // 作成者
-                fieldWithPath("hashTags.[]").type(ARRAY).description("hashtag array"),
-                fieldWithPath("hashTags[].name").type(STRING).description("태그이름").optional(), // hash tag name
-                fieldWithPath("hashTags[].createdAt").type(STRING).description("createdAt").optional().ignored(), // 作成日
-                fieldWithPath("hashTags[].updatedAt").type(STRING).description("updatedAt").optional().ignored(), // 更新日
+                fieldWithPath("hashTags").type(ARRAY).description("hashtag 목록"),
+                fieldWithPath("hashTags.name").type(STRING).description("태그이름").optional(), // hash tag name
                 fieldWithPath("createdAt").type(STRING).description("작성일"), // 作成日
                 fieldWithPath("updatedAt").type(STRING).description("갱신일") // 更新日
             )
