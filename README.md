@@ -73,3 +73,5 @@
 ### 2023.11.23
 - [x] Snippet Custom 適用
 - [x] aws ec2 deploy
+### 2023.11.25
+- [x] Session Cookie方式を利用したログイン機能の実装

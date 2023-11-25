@@ -2,6 +2,7 @@ package jp.falsystack.falsylog_backend.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import jp.falsystack.falsylog_backend.config.data.UserSession;
 import jp.falsystack.falsylog_backend.request.PostCreate;
 import jp.falsystack.falsylog_backend.request.PostSearch;
 import jp.falsystack.falsylog_backend.response.PostResponse;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -25,7 +28,8 @@ public class PostController {
   private final PostService postService;
 
   @PostMapping("/post")
-  public void createPost(@RequestBody @Valid PostCreate postCreate) {
+  public void createPost(@RequestBody @Valid PostCreate postCreate, UserSession userSession) {
+    log.info("userSession = {}", userSession);
     PostWrite postWrite = PostWrite.from(postCreate);
     postService.write(postWrite);
   }

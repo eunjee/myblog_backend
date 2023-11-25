@@ -1,0 +1,16 @@
+### Post-Create
+POST http://localhost:8080/post
+Content-Type: application/json
+Set-Cookie: SESSION=4b3e264d-1f05-40ba-9e4f-082a4bb4a01d
+
+{
+  "author": "daum",
+  "content": "test test test",
+  "hashTags": "#javascript#nextjs#java",
+  "title": "test1"
+}
+
+### Post-Detail
+GET http://localhost:8080/post/1
+Content-Type: application/json
+Authorization: ""

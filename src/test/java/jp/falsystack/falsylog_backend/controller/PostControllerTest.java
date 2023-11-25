@@ -40,17 +40,17 @@ public class PostControllerTest {
 
   private static Post createPostEntity(int count) {
     return Post.builder()
-        .title("記事タイトル" + count)
-        .content("コンテンツ1234" + count)
-        .author("falsystack" + count)
+        .title("Post Title" + count)
+        .content("Content 1234" + count)
+        .author("myblog author" + count)
         .build();
   }
 
   private static Post createPostEntityOptional(int count) {
     var post = Post.builder()
-        .title("記事タイトル" + count)
-        .content("コンテンツ1234" + count)
-        .author("falsystack" + count)
+        .title("Post Title" + count)
+        .content("Content 1234" + count)
+        .author("myblog author" + count)
         .build();
     return post;
   }
@@ -70,14 +70,14 @@ public class PostControllerTest {
 
   private static PostCreate createPostRequestDto(int count) {
     return PostCreate.builder()
-        .title("記事タイトル" + count)
-        .content("コンテンツ1234" + count)
-        .author("falsystack" + count)
+        .title("Post Title" + count)
+        .content("Content 1234" + count)
+        .author("myblog author" + count)
         .hashTags(null)
         .build();
   }
 
-  private static PostCreate createPostRequesOptionaltDto(String title, String content,
+  private static PostCreate createPostRequestOptionalDto(String title, String content,
       String author, String hashTags) {
     return PostCreate.builder()
         .title(title)
@@ -94,7 +94,7 @@ public class PostControllerTest {
   }
 
   @Test
-  @DisplayName("POST /post ブログ記事登録")
+  @DisplayName("POST /post ブログポスト登録")
   void post() throws Exception {
     // given
     var request = createPostRequestDto(0);
@@ -102,6 +102,7 @@ public class PostControllerTest {
 
     // expected
     mockMvc.perform(MockMvcRequestBuilders.post("/post")
+            .header("authorization", "myblog")
             .contentType(APPLICATION_JSON)
             .content(json))
         .andExpect(status().isOk())
@@ -109,10 +110,10 @@ public class PostControllerTest {
   }
 
   @Test
-  @DisplayName("POST /post 記事を登録する時にhashtagがあればhashtagも一緒に登録される。")
+  @DisplayName("POST /post ポストを登録する時にhashtagがあればhashtagも一緒に登録される。")
   void postCreateWithHashTags() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("ハッシュタグ付き記事",
+    var request = createPostRequestOptionalDto("ハッシュタグ付きポスト",
         "ハッシュタグ機能が出来ました。", "作成者",
         "#spring#java#Spring");
     var json = objectMapper.writeValueAsString(request);
@@ -134,10 +135,10 @@ public class PostControllerTest {
   }
 
   @Test
-  @DisplayName("POST /post タイトルがないとブログ記事登録に失敗する。")
+  @DisplayName("POST /post タイトルがないとブログポスト登録に失敗する。")
   void postFail_No_Title() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto(null, "内容12345678", "作成者", null);
+    var request = createPostRequestOptionalDto(null, "内容12345678", "作成者", null);
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -153,10 +154,10 @@ public class PostControllerTest {
   }
 
   @Test
-  @DisplayName("POST /post タイトルは２０文字以下で入力しないと記事登録に失敗する。")
+  @DisplayName("POST /post タイトルは２０文字以下で入力しないとポスト登録に失敗する。")
   void postFail_Least_One_Word() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("1234567890,1234567890", "内容12345678", "作成者",
+    var request = createPostRequestOptionalDto("1234567890,1234567890", "内容12345678", "作成者",
         null);
     String json = objectMapper.writeValueAsString(request);
 
@@ -173,10 +174,10 @@ public class PostControllerTest {
   }
 
   @Test
-  @DisplayName("POST /post コンテンツがないとブログ記事登録に失敗する。")
+  @DisplayName("POST /post Content がないとブログポスト登録に失敗する。")
   void postFailContentMustBeNotBlank() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("タイトル", null, "作成者", null);
+    var request = createPostRequestOptionalDto("タイトル", null, "作成者", null);
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -192,10 +193,10 @@ public class PostControllerTest {
   }
 
   @Test
-  @DisplayName("POST /post コンテンツは１０文字以上入力しないと記事登録に失敗する。")
+  @DisplayName("POST /post Content は１０文字以上入力しないとポスト登録に失敗する。")
   void postFailContentMustBeLeastTenWord() throws Exception {
     // given
-    var request = createPostRequesOptionaltDto("タイトル", "内容1234567", "作成者", null);
+    var request = createPostRequestOptionalDto("タイトル", "内容1234567", "作成者", null);
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -211,7 +212,7 @@ public class PostControllerTest {
   }
 
   @Test
-  @DisplayName("GET /post/{postId} 記事のIDで照会すると記事の詳細が返ってくる。")
+  @DisplayName("GET /post/{postId} ポストのIDで照会するとポストの詳細が返ってくる。")
   void getPost() throws Exception {
     // given
     var post = createPostEntity(0);
@@ -222,14 +223,14 @@ public class PostControllerTest {
             .contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(savedPost.getId().intValue())))
-        .andExpect(jsonPath("$.title", is("記事タイトル0")))
-        .andExpect(jsonPath("$.content", is("コンテンツ12340")))
-        .andExpect(jsonPath("$.author", is("falsystack0")))
+        .andExpect(jsonPath("$.title", is("Post Title0")))
+        .andExpect(jsonPath("$.content", is("Content 12340")))
+        .andExpect(jsonPath("$.author", is("myblog author0")))
         .andDo(print());
   }
 
   @Test
-  @DisplayName("GET /post/{postId} 記事のIDで照会すると記事の詳細が返ってくる。")
+  @DisplayName("GET /post/{postId} ポストのIDで照会するとポストの詳細が返ってくる。")
   void getPostWithHashTags() throws Exception {
     // given
     var post = createPostEntityOptional(0);
@@ -244,16 +245,16 @@ public class PostControllerTest {
             .contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(savedPost.getId().intValue())))
-        .andExpect(jsonPath("$.title", is("記事タイトル0")))
-        .andExpect(jsonPath("$.content", is("コンテンツ12340")))
-        .andExpect(jsonPath("$.author", is("falsystack0")))
+        .andExpect(jsonPath("$.title", is("Post Title0")))
+        .andExpect(jsonPath("$.content", is("Content 12340")))
+        .andExpect(jsonPath("$.author", is("myblog author0")))
         .andExpect(jsonPath("$.hashTags.[0].name", is("#Spring")))
         .andDo(print());
   }
 
 
   @Test
-  @DisplayName("DELETE /post/{postId} 記事のIDを元に削除を行う")
+  @DisplayName("DELETE /post/{postId} ポストのIDを元に削除を行う")
   void deletePost() throws Exception {
     // given
     var post = createPostEntity(0);
@@ -267,7 +268,7 @@ public class PostControllerTest {
   }
 
   @Test
-  @DisplayName("GET /posts 記事一覧を返す")
+  @DisplayName("GET /posts ポスト一覧を返す")
   void getPosts() throws Exception {
     // given
     var postDto1 = createPostEntity(1);
@@ -281,9 +282,9 @@ public class PostControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()", is(3)))
         .andExpectAll(
-            jsonPath("$[0].title", is("記事タイトル3")),
-            jsonPath("$[0].content", is("コンテンツ12343")),
-            jsonPath("$[0].author", is("falsystack3"))
+            jsonPath("$[0].title", is("Post Title3")),
+            jsonPath("$[0].content", is("Content 12343")),
+            jsonPath("$[0].author", is("myblog author3"))
         )
         .andDo(print());
   }
