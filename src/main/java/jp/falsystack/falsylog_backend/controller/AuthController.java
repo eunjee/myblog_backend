@@ -31,9 +31,27 @@ public class AuthController {
   private final AppConfig appConfig;
 
   @PostMapping("/auth/login")
-  public SessionResponse login(@Valid @RequestBody Login login) {
-//  public ResponseEntity<?> login(@Valid @RequestBody Login login) {
-//    var accessToken = authService.signin(login);
+  public ResponseEntity<?> login(@Valid @RequestBody Login login) {
+    var accessToken = authService.signin(login);
+
+    var sessionCookie = ResponseCookie.from("SESSION", accessToken)
+        .path("/")
+        .domain("localhost") // TODO: 서버 환경에 따른 분리 필요
+        .httpOnly(true)
+        .sameSite("Strict")
+        .secure(false)
+        .maxAge(Duration.ofDays(30))
+        .build();
+
+    return ResponseEntity
+        .ok()
+        .header(HttpHeaders.SET_COOKIE, sessionCookie.toString())
+        .build();
+  }
+
+  // TODO: jwtを使うかsession-cookieを使うかまだ決めてないので残しておく、決まったらどちらかを削除
+  @PostMapping("/auth/jwt/login")
+  public SessionResponse loginWithJwt(@Valid @RequestBody Login login) {
 
     var id = authService.signinWithJwt(login);
 
@@ -47,21 +65,6 @@ public class AuthController {
         .compact();
 
     return SessionResponse.from(jws);
-
-    // session cookie
-//    var sessionCookie = ResponseCookie.from("SESSION", accessToken)
-//        .path("/")
-//        .domain("localhost") // TODO: 서버 환경에 따른 분리 필요
-//        .httpOnly(true)
-//        .sameSite("Strict")
-//        .secure(false)
-//        .maxAge(Duration.ofDays(30))
-//        .build();
-
-//    return ResponseEntity
-//        .ok()
-//        .header(HttpHeaders.SET_COOKIE, sessionCookie.toString())
-//        .build();
   }
 
 }
