@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import jp.falsystack.falsylog_backend.request.Signup;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,6 +45,15 @@ public class Member {
         .email(email)
         .password(password)
         .createdAt(createdAt)
+        .build();
+  }
+
+  public static Member from(Signup signup) {
+    return Member.builder()
+        .name(signup.getName())
+        .email(signup.getEmail())
+        .password(signup.getPassword())
+        .createdAt(LocalDateTime.now())
         .build();
   }
 

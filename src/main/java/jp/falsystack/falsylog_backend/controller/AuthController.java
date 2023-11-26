@@ -4,13 +4,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.validation.Valid;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
-import javax.crypto.SecretKey;
 import jp.falsystack.falsylog_backend.config.AppConfig;
 import jp.falsystack.falsylog_backend.request.Login;
+import jp.falsystack.falsylog_backend.request.Signup;
 import jp.falsystack.falsylog_backend.response.SessionResponse;
 import jp.falsystack.falsylog_backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +26,11 @@ public class AuthController {
 
   private final AuthService authService;
   private final AppConfig appConfig;
+
+  @PostMapping("/auth/signup")
+  public void signup(@RequestBody Signup signup) {
+    authService.signup(signup);
+  }
 
   @PostMapping("/auth/login")
   public ResponseEntity<?> login(@Valid @RequestBody Login login) {
