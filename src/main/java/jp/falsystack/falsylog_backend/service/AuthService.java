@@ -22,4 +22,11 @@ public class AuthService {
     return session.getAccessToken();
   }
 
+  public Long signinWithJwt(Login login) {
+    var member = memberRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
+        .orElseThrow(InvalidSigninInformation::new);
+
+    return member.getId();
+  }
+
 }
