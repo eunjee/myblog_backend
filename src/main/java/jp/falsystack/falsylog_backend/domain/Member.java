@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class Member {
   private final List<Session> sessions = new ArrayList<>();
 
   @Builder
-  private Member(String name, String email, String password, LocalDateTime createdAt) {
+  public Member(String name, String email, String password, LocalDateTime createdAt) {
     this.name = name;
     this.email = email;
     this.password = password;
