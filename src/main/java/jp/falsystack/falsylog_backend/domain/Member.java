@@ -28,8 +28,6 @@ public class Member extends BaseEntity {
   private String password;
   private LocalDateTime createdAt;
 
-  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-  private final List<Session> sessions = new ArrayList<>();
 
   @Builder
   public Member(String name, String email, String password, LocalDateTime createdAt) {
@@ -57,9 +55,4 @@ public class Member extends BaseEntity {
         .build();
   }
 
-  public Session addSession() {
-    var session = Session.from(this);
-    this.sessions.add(session);
-    return session;
-  }
 }

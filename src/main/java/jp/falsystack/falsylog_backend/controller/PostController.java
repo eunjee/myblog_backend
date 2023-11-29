@@ -2,7 +2,6 @@ package jp.falsystack.falsylog_backend.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import jp.falsystack.falsylog_backend.config.data.JwtToken;
 import jp.falsystack.falsylog_backend.request.PostCreate;
 import jp.falsystack.falsylog_backend.request.PostSearch;
 import jp.falsystack.falsylog_backend.response.PostResponse;
@@ -26,8 +25,7 @@ public class PostController {
   private final PostService postService;
 
   @PostMapping("/post")
-  public void createPost(@RequestBody @Valid PostCreate postCreate, JwtToken jwtToken) {
-    log.info("userSession = {}", jwtToken);
+  public void createPost(@RequestBody @Valid PostCreate postCreate) {
     PostWrite postWrite = PostWrite.from(postCreate);
     postService.write(postWrite);
   }
