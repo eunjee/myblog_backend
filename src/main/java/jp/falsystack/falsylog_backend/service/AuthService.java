@@ -1,11 +1,11 @@
 package jp.falsystack.falsylog_backend.service;
 
-import jp.falsystack.falsylog_backend.crypto.PasswordEncoder;
 import jp.falsystack.falsylog_backend.domain.Member;
 import jp.falsystack.falsylog_backend.exception.AlreadyExistsEmail;
 import jp.falsystack.falsylog_backend.repository.MemberRepository;
 import jp.falsystack.falsylog_backend.request.Signup;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +20,7 @@ public class AuthService {
       throw new AlreadyExistsEmail();
     });
 
-    var encryptedPassword = encoder.encrypt(signup.getPassword());
+    var encryptedPassword = encoder.encode(signup.getPassword());
 
     var member = Member.builder().name(signup.getName()).email(signup.getEmail())
         .password(encryptedPassword).build();

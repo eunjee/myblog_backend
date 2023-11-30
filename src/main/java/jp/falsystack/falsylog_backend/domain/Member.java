@@ -26,7 +26,7 @@ public class Member extends BaseEntity {
   private String name;
   private String email;
   private String password;
-  private LocalDateTime createdAt;
+  private LocalDateTime createdAt; // TODO: BaseEntity의 createdAt와 중복되어서 현재 값이 안들어감 필드명 변경 필요
 
 
   @Builder
