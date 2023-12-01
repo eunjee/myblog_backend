@@ -23,3 +23,9 @@ Content-Type: application/json
   "email": "signup@test.com",
   "password": "1q2w3e4r"
 }
+
+### user page
+GET http://localhost:8080/user
+
+### admin page
+GET http://localhost:8080/admin
