@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import jp.falsystack.falsylog_backend.annotation.CustomWithMockUser;
 import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.PostHashTag;

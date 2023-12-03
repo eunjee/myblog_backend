@@ -7,6 +7,7 @@ import jp.falsystack.falsylog_backend.config.filter.EmailPasswordAuthFilter;
 import jp.falsystack.falsylog_backend.config.handler.Http401Handler;
 import jp.falsystack.falsylog_backend.config.handler.Http403Handler;
 import jp.falsystack.falsylog_backend.config.handler.LoginFailHandler;
+import jp.falsystack.falsylog_backend.config.handler.LoginSuccessHandler;
 import jp.falsystack.falsylog_backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -34,6 +36,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @Slf4j
 @Configuration
 @EnableWebSecurity(debug = true) // debugモードはstgでは必ずoffにすること
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -62,20 +65,11 @@ public class SecurityConfig {
     return http
         .authorizeHttpRequests((authorize) ->
             authorize
-                .requestMatchers(
-                    mvc.pattern("/auth/signup"),
-                    mvc.pattern("/auth/login")
-                ).permitAll()
-                .requestMatchers(
-                    mvc.pattern("/user")
-                )
-                .hasRole("USER")
-                .requestMatchers(
-                    mvc.pattern("/admin")
-                ).hasRole("ADMIN")
                 .anyRequest()
-                .authenticated())
-        .addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .permitAll()
+        )
+        .addFilterBefore(usernamePasswordAuthenticationFilter(),
+            UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(e -> {
           e.accessDeniedHandler(new Http403Handler(objectMapper));
           e.authenticationEntryPoint(new Http401Handler(objectMapper));
@@ -90,12 +84,11 @@ public class SecurityConfig {
     filter.setAuthenticationSuccessHandler(
         new SimpleUrlAuthenticationSuccessHandler("/"));
     filter.setAuthenticationFailureHandler(new LoginFailHandler(objectMapper));
+    filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(objectMapper));
     filter.setSecurityContextRepository(
         new HttpSessionSecurityContextRepository());
     filter.setAuthenticationManager(authenticationManager());
 
-    var rememberMe = filter.getEnvironment().getProperty("rememberMe");
-    log.info("rememberMe = {}", rememberMe);
 
     var rememberMeServices = new SpringSessionRememberMeServices();
     rememberMeServices.setAlwaysRemember(true);

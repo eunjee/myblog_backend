@@ -9,6 +9,7 @@ import jp.falsystack.falsylog_backend.service.PostService;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +25,7 @@ public class PostController {
 
   private final PostService postService;
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/post")
   public void createPost(@RequestBody @Valid PostCreate postCreate) {
     PostWrite postWrite = PostWrite.from(postCreate);
@@ -35,6 +37,7 @@ public class PostController {
     return postService.getPost(postId);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/post/{postId}")
   public void deletePost(@PathVariable Long postId) {
     postService.delete(postId);
@@ -44,5 +47,7 @@ public class PostController {
   public List<PostResponse> getPosts(@ModelAttribute PostSearch request) {
     return postService.getPosts(request);
   }
+
+  // TODO: editコントローラーの作成必要
 
 }

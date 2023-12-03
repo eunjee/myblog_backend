@@ -83,3 +83,5 @@
 - [x] password暗号化
 ### 2023.11.29
 - [x] spring-securityを入れる
+### 2023.12.03
+- [x] method securityの追加

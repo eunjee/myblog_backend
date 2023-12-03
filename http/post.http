@@ -2,7 +2,7 @@
 POST http://localhost:8080/post
 Content-Type: application/json
 #Set-Cookie: SESSION=4b3e264d-1f05-40ba-9e4f-082a4bb4a01d
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzAxMDEyNzkxfQ.kncubajJtz1y-jGwGqqbk_x6vhqxYOSSzDR8siWp3II
+#Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzAxMDEyNzkxfQ.kncubajJtz1y-jGwGqqbk_x6vhqxYOSSzDR8siWp3II
 
 {
   "author": "daum",
