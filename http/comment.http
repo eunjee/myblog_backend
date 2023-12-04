@@ -1,0 +1,11 @@
+### Comment-Create
+POST http://localhost:8080/posts/1/comments
+Content-Type: application/json
+
+{
+  "author": "작성자입니다",
+  "content": "댓글테스트중입니다.",
+  "password": "1q2w3e4r"
+}
+
+

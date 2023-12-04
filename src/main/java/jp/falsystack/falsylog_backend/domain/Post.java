@@ -1,14 +1,15 @@
 package jp.falsystack.falsylog_backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,27 +31,45 @@ public class Post extends BaseEntity {
   private String title;
   @Lob
   private String content;
-  private String author;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn
+  private Member member;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostHashTag> postHashTags = new ArrayList<>();
 
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+  private List<Comment> comments = new ArrayList<>();
+
   @Builder
-  private Post(String title, String content, String author) {
+  private Post(String title, String content, Member member) {
     this.title = title;
     this.content = content;
-    this.author = author;
+    this.member = member;
   }
 
   public static Post from(PostWrite postWrite) {
     return Post.builder()
         .title(postWrite.getTitle())
         .content(postWrite.getContent())
-        .author(postWrite.getAuthor())
         .build();
   }
 
   public void addPostHashTags(List<PostHashTag> postHashTags) {
     this.postHashTags.addAll(postHashTags);
+  }
+
+  public void addMember(Member member) {
+    member.getPosts().add(this);
+    this.member = member;
+  }
+
+  public void addComment(Comment comment) {
+    comments.add(comment);
+  }
+
+  public Long getMemberId() {
+    return member.getId();
   }
 }

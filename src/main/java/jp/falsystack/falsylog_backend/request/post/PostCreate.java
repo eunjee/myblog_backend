@@ -1,4 +1,4 @@
-package jp.falsystack.falsylog_backend.request;
+package jp.falsystack.falsylog_backend.request.post;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,14 +16,12 @@ public class PostCreate {
   @NotBlank(message = "내용을 입력해주세요") // 内容を入力してください。
   @Size(min = 10, message = "10글자 이상 입력해주세요") // １０文字以上入力してください。
   private final String content;
-  private final String author;
   private final String hashTags;
 
   @Builder
-  public PostCreate(String title, String content, String author, String hashTags) {
+  public PostCreate(String title, String content, String hashTags) {
     this.title = title;
     this.content = content;
-    this.author = author;
     this.hashTags = hashTags;
   }
 }

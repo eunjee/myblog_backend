@@ -1,4 +1,4 @@
-package jp.falsystack.falsylog_backend.repository;
+package jp.falsystack.falsylog_backend.repository.post;
 
 import jp.falsystack.falsylog_backend.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

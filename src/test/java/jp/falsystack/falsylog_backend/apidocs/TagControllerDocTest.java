@@ -45,7 +45,7 @@ public class TagControllerDocTest {
     postService.write(PostWrite.builder()
         .title("タグ付きポストのタイトルです。")
         .content("タグ付きポストのコンテンツです。")
-        .author("ユーザー機能はいつ作るの。")
+        .memberId(1L)
         .hashTags("#Spring#Java#javascript")
         .build());
 

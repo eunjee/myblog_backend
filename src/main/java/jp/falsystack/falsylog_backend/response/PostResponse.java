@@ -37,7 +37,7 @@ public class PostResponse {
         .id(post.getId())
         .title(post.getTitle())
         .content(post.getContent())
-        .author(post.getAuthor())
+        .author(post.getMember().getName())
         .createdAt(post.getCreatedAt())
         .updatedAt(post.getUpdatedAt())
         .build();

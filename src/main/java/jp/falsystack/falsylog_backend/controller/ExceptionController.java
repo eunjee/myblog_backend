@@ -2,6 +2,7 @@ package jp.falsystack.falsylog_backend.controller;
 
 import jp.falsystack.falsylog_backend.exception.MyBlogException;
 import jp.falsystack.falsylog_backend.response.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class ExceptionController {
 
@@ -35,6 +37,20 @@ public class ExceptionController {
 
     return ResponseEntity
         .status(e.getStatusCode())
+        .body(errorResponse);
+  }
+
+  // 想定外のエラー
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> exception(Exception e) {
+    log.error("[想定外のエラー]", e);
+
+    var errorResponse = ErrorResponse.builder()
+        .message(e.getMessage())
+        .build();
+
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
         .body(errorResponse);
   }
 }

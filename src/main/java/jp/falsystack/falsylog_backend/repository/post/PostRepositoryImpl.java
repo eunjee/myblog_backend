@@ -1,10 +1,10 @@
-package jp.falsystack.falsylog_backend.repository;
+package jp.falsystack.falsylog_backend.repository.post;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.QPost;
-import jp.falsystack.falsylog_backend.request.PostSearch;
+import jp.falsystack.falsylog_backend.request.post.PostSearch;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import jp.falsystack.falsylog_backend.domain.Post;
-import jp.falsystack.falsylog_backend.repository.PostRepository;
-import jp.falsystack.falsylog_backend.request.PostCreate;
+import jp.falsystack.falsylog_backend.repository.post.PostRepository;
+import jp.falsystack.falsylog_backend.request.post.PostCreate;
 import jp.falsystack.falsylog_backend.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

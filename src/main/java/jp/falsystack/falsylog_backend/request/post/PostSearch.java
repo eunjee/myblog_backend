@@ -1,4 +1,4 @@
-package jp.falsystack.falsylog_backend.request;
+package jp.falsystack.falsylog_backend.request.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package jp.falsystack.falsylog_backend.service.dto;
 
-import jp.falsystack.falsylog_backend.request.PostCreate;
+import jp.falsystack.falsylog_backend.request.post.PostCreate;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,22 +9,22 @@ public class PostWrite {
 
   private final String title;
   private final String content;
-  private final String author;
+  private final Long memberId;
   private final String hashTags;
 
   @Builder
-  private PostWrite(String title, String content, String author, String hashTags) {
+  private PostWrite(String title, String content, Long memberId, String hashTags) {
     this.title = title;
     this.content = content;
-    this.author = author;
+    this.memberId = memberId;
     this.hashTags = hashTags;
   }
 
-  public static PostWrite from(PostCreate postCreate) {
+  public static PostWrite of(PostCreate postCreate, Long memberId) {
     return PostWrite.builder()
         .title(postCreate.getTitle())
         .content(postCreate.getContent())
-        .author(postCreate.getAuthor())
+        .memberId(memberId)
         .hashTags(postCreate.getHashTags())
         .build();
   }

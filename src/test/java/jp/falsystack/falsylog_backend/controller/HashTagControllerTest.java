@@ -8,7 +8,7 @@ import java.util.List;
 import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.PostHashTag;
-import jp.falsystack.falsylog_backend.repository.PostRepository;
+import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

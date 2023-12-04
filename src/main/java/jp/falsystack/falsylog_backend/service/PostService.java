@@ -6,10 +6,12 @@ import java.util.regex.Pattern;
 import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.PostHashTag;
+import jp.falsystack.falsylog_backend.exception.MemberNotFound;
 import jp.falsystack.falsylog_backend.exception.PostNotFound;
 import jp.falsystack.falsylog_backend.repository.HashTagRepository;
-import jp.falsystack.falsylog_backend.repository.PostRepository;
-import jp.falsystack.falsylog_backend.request.PostSearch;
+import jp.falsystack.falsylog_backend.repository.MemberRepository;
+import jp.falsystack.falsylog_backend.repository.post.PostRepository;
+import jp.falsystack.falsylog_backend.request.post.PostSearch;
 import jp.falsystack.falsylog_backend.response.PostResponse;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +27,14 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final HashTagRepository hashTagRepository;
+  private final MemberRepository memberRepository;
 
   @Transactional
   public void write(PostWrite postWrite) {
     var post = Post.from(postWrite);
+
+    var member = memberRepository.findById(postWrite.getMemberId())
+        .orElseThrow(MemberNotFound::new);
 
     if (StringUtils.hasText(postWrite.getHashTags())) {
       var postHashTags = new ArrayList<PostHashTag>();
@@ -48,6 +54,7 @@ public class PostService {
         postHashTags.add(postHashTag);
 
       }
+      post.addMember(member);
       post.addPostHashTags(postHashTags);
     }
     postRepository.save(post);

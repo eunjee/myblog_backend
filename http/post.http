@@ -5,13 +5,16 @@ Content-Type: application/json
 #Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzAxMDEyNzkxfQ.kncubajJtz1y-jGwGqqbk_x6vhqxYOSSzDR8siWp3II
 
 {
-  "author": "daum",
-  "content": "test test test3",
+  "author": "kakao",
+  "content": "testコンテンツです。",
   "hashTags": "#javascript#nextjs#java",
-  "title": "test1"
+  "title": "テスト2"
 }
 
 ### Post-Detail
 GET http://localhost:8080/post/2
 Content-Type: application/json
 Authorization: ""
+
+### Post-Delete
+DELETE http://localhost:8080/post/1

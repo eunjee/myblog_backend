@@ -36,7 +36,6 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @Slf4j
 @Configuration
 @EnableWebSecurity(debug = true) // debugモードはstgでは必ずoffにすること
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 

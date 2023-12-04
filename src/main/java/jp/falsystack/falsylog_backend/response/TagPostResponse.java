@@ -41,7 +41,7 @@ public class TagPostResponse {
         .id(post.getId())
         .title(post.getTitle())
         .content(post.getContent())
-        .author(post.getAuthor())
+        .author(post.getMember().getName())
         .hashTags(tags)
         .createdAt(post.getCreatedAt())
         .updatedAt(post.getUpdatedAt())

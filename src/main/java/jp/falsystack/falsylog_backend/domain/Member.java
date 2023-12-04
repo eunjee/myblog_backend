@@ -26,8 +26,11 @@ public class Member extends BaseEntity {
   private String name;
   private String email;
   private String password;
-  private LocalDateTime createdAt; // TODO: BaseEntity의 createdAt와 중복되어서 현재 값이 안들어감 필드명 변경 필요
+  private LocalDateTime createdAt; // TODO: BaseEntity 의 createdAt와 중복되어서 현재 값이 안들어감 필드명 변경 필요
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private List<Post> posts = new ArrayList<>();
 
+  // TODO:　ROLE追加必要
 
   @Builder
   public Member(String name, String email, String password, LocalDateTime createdAt) {
