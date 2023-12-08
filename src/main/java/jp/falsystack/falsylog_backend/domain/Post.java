@@ -32,7 +32,7 @@ public class Post extends BaseEntity {
   @Lob
   private String content;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn
   private Member member;
 

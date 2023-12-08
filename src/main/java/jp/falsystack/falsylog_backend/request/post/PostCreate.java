@@ -9,8 +9,8 @@ import lombok.Getter;
 @Getter
 public class PostCreate {
 
-  @NotEmpty(message = "타이틀을 입력해주세요") // タイトルを入力してください。
-  @Size(min = 1, max = 20, message = "타이틀은 한 글자 이상 20 자 이하로 작성해 주세요") // タイトルは１文字以上２０文字以下で作成してください。
+  @NotBlank(message = "제목을 입력해주세요") // タイトルを入力してください。
+  @Size(min = 1, max = 20, message = "제목은 1~20 글자로 작성해 주세요") // タイトルは１文字以上２０文字以下で作成してください。
   private final String title;
 
   @NotBlank(message = "내용을 입력해주세요") // 内容を入力してください。

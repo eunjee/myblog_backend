@@ -38,4 +38,14 @@ public class PostHashTag extends BaseEntity{
     this.hashTag = hashTag;
     this.post = post;
   }
+
+  public void addPost(Post post) {
+    post.getPostHashTags().add(this);
+    this.post = post;
+  }
+
+  public void addHashTag(HashTag hashTag) {
+    hashTag.getPostHashTags().add(this);
+    this.hashTag = hashTag;
+  }
 }

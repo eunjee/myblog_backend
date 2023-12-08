@@ -10,9 +10,9 @@ import org.springframework.validation.FieldError;
 
 /**
  * {
- *  "message": "잘못된 요청입니다.",
+ *  "message": "잘못된 요청입니다",
  *  "validation" : {
- *    "title": "1글자 입력해주세요."
+ *    "title": "1글자 입력해주세요"
  *    }
  *  }
  */

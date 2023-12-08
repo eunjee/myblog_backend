@@ -27,7 +27,7 @@ class PostRepositoryTest {
     return Post.builder()
         .title("タイトル" + position)
         .content("コンテンツ" + position)
-        .author("作成者" + position)
+//        .author("作成者" + position)
         .build();
   }
 
@@ -45,7 +45,7 @@ class PostRepositoryTest {
     // then
     assertThat(findPost.getTitle()).isEqualTo("タイトル1");
     assertThat(findPost.getContent()).isEqualTo("コンテンツ1");
-    assertThat(findPost.getAuthor()).isEqualTo("作成者1");
+//    assertThat(findPost.getAuthor()).isEqualTo("作成者1");
   }
 
   @Test

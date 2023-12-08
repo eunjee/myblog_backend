@@ -56,7 +56,7 @@ public class PostControllerDocTest {
     return Post.builder()
         .title("記事タイトル" + count)
         .content("コンテンツ" + count)
-        .author("falsystack" + count)
+//        .author("falsystack" + count)
         .build();
   }
 
@@ -65,7 +65,7 @@ public class PostControllerDocTest {
     return PostCreate.builder()
         .title(title)
         .content(content)
-        .author(author)
+//        .author(author)
         .hashTags(hashTags)
         .build();
   }
@@ -74,7 +74,7 @@ public class PostControllerDocTest {
     var post = Post.builder()
         .title("記事タイトル" + count)
         .content("コンテンツ1234" + count)
-        .author("falsystack" + count)
+//        .author("falsystack" + count)
         .build();
     return post;
   }
@@ -92,7 +92,7 @@ public class PostControllerDocTest {
     var request = PostCreate.builder()
         .title("ポストータイトル(포스트 타이틀)")
         .content("ポスト内容(포스트 내용)")
-        .author("作成者(작성자)")
+//        .author("作成者(작성자)")
         .hashTags("ハッシュタグ(해시태그)")
         .build();
     var json = objectMapper.writeValueAsString(request);

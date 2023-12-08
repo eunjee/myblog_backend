@@ -44,7 +44,7 @@ class HashTagControllerTest {
     var post = Post.builder()
         .title("記事タイトル" + count)
         .content("コンテンツ1234" + count)
-        .author("falsystack" + count)
+//        .author("falsystack" + count)
         .build();
 //    post.addPostHashTags("#Spring#Java#Javascript");
     return post;

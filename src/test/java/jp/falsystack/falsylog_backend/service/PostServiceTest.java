@@ -5,9 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
+import jp.falsystack.falsylog_backend.annotation.CustomWithMockUser;
+import jp.falsystack.falsylog_backend.domain.Member;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.exception.PostNotFound;
 import jp.falsystack.falsylog_backend.repository.HashTagRepository;
+import jp.falsystack.falsylog_backend.repository.MemberRepository;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
 import jp.falsystack.falsylog_backend.request.post.PostSearch;
@@ -29,6 +32,8 @@ class PostServiceTest {
   private PostRepository postRepository;
   @Autowired
   private HashTagRepository hashTagRepository;
+  @Autowired
+  private MemberRepository memberRepository;
 
   private static Post createPostDto(int count) {
     return Post.builder()
@@ -74,24 +79,28 @@ class PostServiceTest {
         .contains("#Spring", "#Java");
   }
 
+  @CustomWithMockUser
   @Test
-  @DisplayName("記事を作成することができる")
+  @DisplayName("hashTag無しでポストを問題なく作成することができる")
   void write() {
     // given
-    var post = PostWrite.of(PostCreate.builder()
-        .title("タイトル")
-        .content("コンテンツ")
-        .build(), 1L);
+    var member = memberRepository.findAll().get(0);
+    var postWrite = PostWrite.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .memberId(member.getId())
+        .build();
 
     // when
-    postService.write(post);
+    postService.write(postWrite);
 
     // then
     var posts = postRepository.findAll();
+
     assertThat(posts).hasSize(1)
-        .extracting("title", "author")
-        .containsExactlyInAnyOrder(
-            tuple("タイトル", "作成者")
+        .extracting("title", "content")
+        .contains(
+            tuple("美味しいラーメンが食いたい。", "なら一蘭に行こう。ラーメンは豚骨だ。")
         );
   }
 

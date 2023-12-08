@@ -10,12 +10,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import jp.falsystack.falsylog_backend.annotation.CustomWithMockUser;
 import jp.falsystack.falsylog_backend.domain.HashTag;
+import jp.falsystack.falsylog_backend.domain.Member;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.PostHashTag;
 import jp.falsystack.falsylog_backend.repository.HashTagRepository;
+import jp.falsystack.falsylog_backend.repository.MemberRepository;
+import jp.falsystack.falsylog_backend.repository.PostHashTagRepository;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +30,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,85 +44,55 @@ public class PostControllerTest {
   private PostRepository postRepository;
   @Autowired
   private HashTagRepository hashTagRepository;
+  @Autowired
+  private MemberRepository memberRepository;
+  @Autowired
+  private PostHashTagRepository postHashTagRepository;
 
-  private static Post createPostEntity(int count) {
-    return Post.builder()
-        .title("Post Title" + count)
-        .content("Content 1234" + count)
-        .author("myblog author" + count)
-        .build();
+  @AfterEach
+  void afterEach() {
+    postHashTagRepository.deleteAllInBatch();
+    hashTagRepository.deleteAllInBatch();
+    postRepository.deleteAllInBatch();
+    memberRepository.deleteAllInBatch();
   }
 
-  private static Post createPostEntityOptional(int count) {
-    var post = Post.builder()
-        .title("Post Title" + count)
-        .content("Content 1234" + count)
-        .author("myblog author" + count)
-        .build();
-    return post;
-  }
+  /**
+   * TODO: このコメントがいるかもっと考えてみる
+   * Post登録テスト
+   */
 
-  private static PostHashTag createPostHashTag(HashTag hashTag, Post post) {
-    return PostHashTag.builder()
-        .hashTag(hashTag)
-        .post(post)
-        .build();
-  }
-
-  private static HashTag createHashTag(String name) {
-    return HashTag.builder()
-        .name(name)
-        .build();
-  }
-
-  private static PostCreate createPostRequestDto(int count) {
-    return PostCreate.builder()
-        .title("Post Title" + count)
-        .content("Content 1234" + count)
-        .author("myblog author" + count)
-        .hashTags(null)
-        .build();
-  }
-
-  private static PostCreate createPostRequestOptionalDto(String title, String content,
-      String author, String hashTags) {
-    return PostCreate.builder()
-        .title(title)
-        .content(content)
-        .author(author)
-        .hashTags(hashTags)
-        .build();
-  }
-
-  @BeforeEach
-  void beforeEach() {
-    postRepository.deleteAll();
-//    postRepository.deleteAllInBatch();
-  }
-
+  // 見直しオッケー
+  @CustomWithMockUser
   @Test
-  @DisplayName("POST /post ブログポスト登録")
+  @DisplayName("/post hashTag無しでポスト登録を要請すると問題なく登録される")
   void post() throws Exception {
     // given
-    var request = createPostRequestDto(0);
+    var request = PostCreate.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
     String json = objectMapper.writeValueAsString(request);
 
     // expected
     mockMvc.perform(MockMvcRequestBuilders.post("/post")
-            .header("authorization", "myblog")
             .contentType(APPLICATION_JSON)
             .content(json))
         .andExpect(status().isOk())
         .andDo(print());
   }
 
+  // 見直しオッケー
+  @CustomWithMockUser
   @Test
-  @DisplayName("POST /post ポストを登録する時にhashtagがあればhashtagも一緒に登録される。")
+  @DisplayName("/post ポストを登録する時にhashtagがあればhashtagも一緒に登録される。")
   void postCreateWithHashTags() throws Exception {
     // given
-    var request = createPostRequestOptionalDto("ハッシュタグ付きポスト",
-        "ハッシュタグ機能が出来ました。", "作成者",
-        "#spring#java#Spring");
+    var request = PostCreate.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .hashTags("#一蘭#ラーメン#日本料理")
+        .build();
     var json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -130,15 +107,20 @@ public class PostControllerTest {
         .hasSize(3)
         .extracting("name")
         .containsExactlyInAnyOrder(
-        "#spring", "#Spring", "#java"
-    );
+            "#一蘭", "#ラーメン", "#日本料理"
+        );
   }
 
+  // 見直しオッケー
   @Test
-  @DisplayName("POST /post タイトルがないとブログポスト登録に失敗する。")
+  @DisplayName("/post タイトルが「null」とポスト登録に失敗する。")
   void postFail_No_Title() throws Exception {
     // given
-    var request = createPostRequestOptionalDto(null, "内容12345678", "作成者", null);
+    var request = PostCreate.builder()
+        .title(null)
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .hashTags(null)
+        .build();
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -147,18 +129,47 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.message", is("잘못된 요청입니다.")),
-            jsonPath("$.validation.title", is("타이틀을 입력해주세요"))
+            jsonPath("$.message", is("잘못된 요청입니다")),
+            jsonPath("$.validation.title", is("제목을 입력해주세요"))
         )
         .andDo(print());
   }
 
+  // 見直しオッケー
   @Test
-  @DisplayName("POST /post タイトルは２０文字以下で入力しないとポスト登録に失敗する。")
+  @DisplayName("/post タイトルが「' '」とポスト登録に失敗する。")
+  void postFail_Not_Empty() throws Exception {
+    // given
+    var request = PostCreate.builder()
+        .title(" ")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .hashTags(null)
+        .build();
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(MockMvcRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest())
+        .andExpectAll(
+            jsonPath("$.message", is("잘못된 요청입니다")),
+            jsonPath("$.validation.title", is("제목을 입력해주세요"))
+        )
+        .andDo(print());
+  }
+
+  // 見直しオッケー
+  @CustomWithMockUser
+  @Test
+  @DisplayName("/post タイトルは1~20文字で入力しないとポスト登録に失敗する。")
   void postFail_Least_One_Word() throws Exception {
     // given
-    var request = createPostRequestOptionalDto("1234567890,1234567890", "内容12345678", "作成者",
-        null);
+    var request = PostCreate.builder()
+        .title("美味しいラーメンが食いたいけど一蘭まで歩くのはキツイ。")
+        .content("ならウーバーイーツがあるぞ")
+        .hashTags(null)
+        .build();
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -167,17 +178,22 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.message", is("잘못된 요청입니다.")),
-            jsonPath("$.validation.title", is("타이틀은 한 글자 이상 20 자 이하로 작성해 주세요"))
+            jsonPath("$.message", is("잘못된 요청입니다")),
+            jsonPath("$.validation.title", is("제목은 1~20 글자로 작성해 주세요"))
         )
         .andDo(print());
   }
 
+  // 見直しオッケー
   @Test
-  @DisplayName("POST /post Content がないとブログポスト登録に失敗する。")
+  @DisplayName("/post Contentがないとポスト登録に失敗する。")
   void postFailContentMustBeNotBlank() throws Exception {
-    // given
-    var request = createPostRequestOptionalDto("タイトル", null, "作成者", null);
+    // given목
+    var request = PostCreate.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content(null)
+        .hashTags(null)
+        .build();
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -186,17 +202,22 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.message", is("잘못된 요청입니다.")),
+            jsonPath("$.message", is("잘못된 요청입니다")),
             jsonPath("$.validation.content", is("내용을 입력해주세요"))
         )
         .andDo(print());
   }
 
+  // 見直しオッケー
   @Test
-  @DisplayName("POST /post Content は１０文字以上入力しないとポスト登録に失敗する。")
+  @DisplayName("/post Content は10文字以上入力しないとポスト登録に失敗する。")
   void postFailContentMustBeLeastTenWord() throws Exception {
     // given
-    var request = createPostRequestOptionalDto("タイトル", "内容1234567", "作成者", null);
+    var request = PostCreate.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。")
+        .hashTags(null)
+        .build();
     String json = objectMapper.writeValueAsString(request);
 
     // expected
@@ -205,17 +226,31 @@ public class PostControllerTest {
             .content(json))
         .andExpect(status().isBadRequest())
         .andExpectAll(
-            jsonPath("$.message", is("잘못된 요청입니다.")),
+            jsonPath("$.message", is("잘못된 요청입니다")),
             jsonPath("$.validation.content", is("10글자 이상 입력해주세요"))
         )
         .andDo(print());
   }
 
+  /**
+   * Post照会
+   */
+
+  // 見直しオッケー
   @Test
-  @DisplayName("GET /post/{postId} ポストのIDで照会するとポストの詳細が返ってくる。")
+  @DisplayName("/post/{postId} ポストのIDで照会するとポストの詳細が返ってくる。")
   void getPost() throws Exception {
     // given
-    var post = createPostEntity(0);
+    var member = Member.builder()
+        .name("テストメンバー")
+        .password("1q2w3e4r")
+        .email("test@test.com")
+        .build();
+    var post = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post.addMember(member);
     var savedPost = postRepository.save(post);
 
     // expected
@@ -223,21 +258,34 @@ public class PostControllerTest {
             .contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(savedPost.getId().intValue())))
-        .andExpect(jsonPath("$.title", is("Post Title0")))
-        .andExpect(jsonPath("$.content", is("Content 12340")))
-        .andExpect(jsonPath("$.author", is("myblog author0")))
+        .andExpect(jsonPath("$.title", is("美味しいラーメンが食いたい。")))
+        .andExpect(jsonPath("$.content", is("なら一蘭に行こう。ラーメンは豚骨だ。")))
+        .andExpect(jsonPath("$.author", is("テストメンバー")))
         .andDo(print());
   }
 
+  // 見直しオッケー
   @Test
-  @DisplayName("GET /post/{postId} ポストのIDで照会するとポストの詳細が返ってくる。")
+  @DisplayName("/post/{postId} ポストのIDで照会するとhashTagが含まれたポストの詳細が返ってくる。")
   void getPostWithHashTags() throws Exception {
     // given
-    var post = createPostEntityOptional(0);
-    var hashTag = createHashTag("#Spring");
-    var postHashTag = createPostHashTag(hashTag, post);
-    post.addPostHashTags(List.of(postHashTag));
-    hashTag.addPostHashTags(List.of(postHashTag));
+    var member = Member.builder()
+        .name("テストメンバー")
+        .password("1q2w3e4r")
+        .email("test@test.com")
+        .build();
+    var post = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    var hashTag = HashTag.builder()
+        .name("#ラーメン")
+        .build();
+    var postHashTag = PostHashTag.builder()
+        .build();
+    postHashTag.addPost(post);
+    postHashTag.addHashTag(hashTag);
+    post.addMember(member);
     var savedPost = postRepository.save(post);
 
     // expected
@@ -245,19 +293,30 @@ public class PostControllerTest {
             .contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(savedPost.getId().intValue())))
-        .andExpect(jsonPath("$.title", is("Post Title0")))
-        .andExpect(jsonPath("$.content", is("Content 12340")))
-        .andExpect(jsonPath("$.author", is("myblog author0")))
-        .andExpect(jsonPath("$.hashTags.[0].name", is("#Spring")))
+        .andExpect(jsonPath("$.title", is("美味しいラーメンが食いたい。")))
+        .andExpect(jsonPath("$.content", is("なら一蘭に行こう。ラーメンは豚骨だ。")))
+        .andExpect(jsonPath("$.author", is("テストメンバー")))
+        .andExpect(jsonPath("$.hashTags.[0].name", is("#ラーメン")))
         .andDo(print());
   }
 
+  /**
+   * Post削除
+   */
 
+  @CustomWithMockUser
+  @Transactional
   @Test
-  @DisplayName("DELETE /post/{postId} ポストのIDを元に削除を行う")
+  @DisplayName("/post/{postId} ポストのIDを元に削除を行う")
   void deletePost() throws Exception {
     // given
-    var post = createPostEntity(0);
+    // 先に保存されたMockUserのデータを呼び出す
+    var member = memberRepository.findAll().get(0);
+    var post = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post.addMember(member);
     var savedPost = postRepository.save(post);
 
     // expected
@@ -267,14 +326,56 @@ public class PostControllerTest {
         .andDo(print());
   }
 
+  @CustomWithMockUser
+  @Transactional
   @Test
-  @DisplayName("GET /posts ポスト一覧を返す")
+  @DisplayName("/post/{postId} 文字のポストのIDでポストの削除をリクエストすると失敗する")
+  void deletePostFail() throws Exception {
+    // given
+    // 先に保存されたMockUserのデータを呼び出す
+    var member = memberRepository.findAll().get(0);
+    var post = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post.addMember(member);
+    var savedPost = postRepository.save(post);
+
+    // expected
+    mockMvc.perform(MockMvcRequestBuilders.delete("/post/{potId}", "aaa")
+            .contentType(APPLICATION_JSON))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message", is("잘못된 요청입니다")))
+        .andDo(print());
+  }
+
+  @Test
+  @DisplayName("/posts ポスト一覧を返す")
   void getPosts() throws Exception {
     // given
-    var postDto1 = createPostEntity(1);
-    var postDto2 = createPostEntity(2);
-    var postDto3 = createPostEntity(3);
-    postRepository.saveAll(List.of(postDto1, postDto2, postDto3));
+    var member = Member.builder()
+        .name("テストメンバー")
+        .password("1q2w3e4r")
+        .email("test@test.com")
+        .build();
+    var post1 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post1.addMember(member);
+
+    var post2 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post2.addMember(member);
+
+    var post3 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post3.addMember(member);
+    postRepository.saveAll(List.of(post1, post2, post3));
 
     // expected
     mockMvc.perform(get("/posts")
@@ -282,9 +383,9 @@ public class PostControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()", is(3)))
         .andExpectAll(
-            jsonPath("$[0].title", is("Post Title3")),
-            jsonPath("$[0].content", is("Content 12343")),
-            jsonPath("$[0].author", is("myblog author3"))
+            jsonPath("$[0].title", is("美味しいラーメンが食いたい。")),
+            jsonPath("$[0].content", is("なら一蘭に行こう。ラーメンは豚骨だ。")),
+            jsonPath("$[0].author", is("テストメンバー"))
         )
         .andDo(print());
   }
