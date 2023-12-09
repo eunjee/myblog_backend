@@ -20,9 +20,7 @@ import jp.falsystack.falsylog_backend.repository.MemberRepository;
 import jp.falsystack.falsylog_backend.repository.PostHashTagRepository;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +60,7 @@ public class PostControllerTest {
    * Post登録テスト
    */
 
-  // 見直しオッケー
+
   @CustomWithMockUser
   @Test
   @DisplayName("/post hashTag無しでポスト登録を要請すると問題なく登録される")
@@ -82,7 +80,7 @@ public class PostControllerTest {
         .andDo(print());
   }
 
-  // 見直しオッケー
+
   @CustomWithMockUser
   @Test
   @DisplayName("/post ポストを登録する時にhashtagがあればhashtagも一緒に登録される。")
@@ -111,7 +109,7 @@ public class PostControllerTest {
         );
   }
 
-  // 見直しオッケー
+
   @Test
   @DisplayName("/post タイトルが「null」とポスト登録に失敗する。")
   void postFail_No_Title() throws Exception {
@@ -135,7 +133,7 @@ public class PostControllerTest {
         .andDo(print());
   }
 
-  // 見直しオッケー
+
   @Test
   @DisplayName("/post タイトルが「' '」とポスト登録に失敗する。")
   void postFail_Not_Empty() throws Exception {
@@ -159,7 +157,7 @@ public class PostControllerTest {
         .andDo(print());
   }
 
-  // 見直しオッケー
+
   @CustomWithMockUser
   @Test
   @DisplayName("/post タイトルは1~20文字で入力しないとポスト登録に失敗する。")
@@ -184,7 +182,7 @@ public class PostControllerTest {
         .andDo(print());
   }
 
-  // 見直しオッケー
+
   @Test
   @DisplayName("/post Contentがないとポスト登録に失敗する。")
   void postFailContentMustBeNotBlank() throws Exception {
@@ -208,7 +206,7 @@ public class PostControllerTest {
         .andDo(print());
   }
 
-  // 見直しオッケー
+
   @Test
   @DisplayName("/post Content は10文字以上入力しないとポスト登録に失敗する。")
   void postFailContentMustBeLeastTenWord() throws Exception {
@@ -236,7 +234,7 @@ public class PostControllerTest {
    * Post照会
    */
 
-  // 見直しオッケー
+
   @Test
   @DisplayName("/post/{postId} ポストのIDで照会するとポストの詳細が返ってくる。")
   void getPost() throws Exception {
@@ -264,7 +262,7 @@ public class PostControllerTest {
         .andDo(print());
   }
 
-  // 見直しオッケー
+
   @Test
   @DisplayName("/post/{postId} ポストのIDで照会するとhashTagが含まれたポストの詳細が返ってくる。")
   void getPostWithHashTags() throws Exception {

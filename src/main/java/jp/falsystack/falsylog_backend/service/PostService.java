@@ -31,7 +31,7 @@ public class PostService {
 
   @Transactional
   public void write(PostWrite postWrite) {
-    var post = Post.from(postWrite);
+    var post = postWrite.toEntity();
 
     var member = memberRepository.findById(postWrite.getMemberId())
         .orElseThrow(MemberNotFound::new);
@@ -60,6 +60,7 @@ public class PostService {
     postRepository.save(post);
   }
 
+  @Transactional
   public List<PostResponse> getPosts(PostSearch postSearch) {
     return postRepository.getList(postSearch)
         .stream()

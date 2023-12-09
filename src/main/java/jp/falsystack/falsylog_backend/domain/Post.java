@@ -49,13 +49,6 @@ public class Post extends BaseEntity {
     this.member = member;
   }
 
-  public static Post from(PostWrite postWrite) {
-    return Post.builder()
-        .title(postWrite.getTitle())
-        .content(postWrite.getContent())
-        .build();
-  }
-
   public void addPostHashTags(List<PostHashTag> postHashTags) {
     this.postHashTags.addAll(postHashTags);
   }

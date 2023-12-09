@@ -1,5 +1,6 @@
 package jp.falsystack.falsylog_backend.service.dto;
 
+import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,13 @@ public class PostWrite {
         .content(postCreate.getContent())
         .memberId(memberId)
         .hashTags(postCreate.getHashTags())
+        .build();
+  }
+
+  public Post toEntity() {
+    return Post.builder()
+        .title(getTitle())
+        .content(getContent())
         .build();
   }
 }
