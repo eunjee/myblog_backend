@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
+import jp.falsystack.falsylog_backend.domain.Member;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class PostRepositoryTest {
@@ -23,19 +25,21 @@ class PostRepositoryTest {
     postRepository.deleteAllInBatch();
   }
 
-  private static Post createPostDto(int position) {
-    return Post.builder()
-        .title("タイトル" + position)
-        .content("コンテンツ" + position)
-//        .author("作成者" + position)
-        .build();
-  }
-
   @Test
-  @DisplayName("記事のIDを受取該当する記事を返す")
+  @Transactional
+  @DisplayName("ポストのIDを受取該当するポストの詳細を返す")
   void findByPostId() {
     // given
-    var post = createPostDto(1);
+    var member = Member.builder()
+        .name("テストメンバー")
+        .password("1q2w3e4r")
+        .email("test@test.com")
+        .build();
+    var post = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post.addMember(member);
     var savedPost = postRepository.save(post);
     var postId = savedPost.getId();
 
@@ -43,31 +47,36 @@ class PostRepositoryTest {
     var findPost = postRepository.findById(postId).get();
 
     // then
-    assertThat(findPost.getTitle()).isEqualTo("タイトル1");
-    assertThat(findPost.getContent()).isEqualTo("コンテンツ1");
-//    assertThat(findPost.getAuthor()).isEqualTo("作成者1");
+    assertThat(findPost.getTitle()).isEqualTo("美味しいラーメンが食いたい。");
+    assertThat(findPost.getContent()).isEqualTo("なら一蘭に行こう。ラーメンは豚骨だ。");
+    assertThat(findPost.getMember().getName()).isEqualTo("テストメンバー");
   }
 
   @Test
-  @DisplayName("記事を作成するとPostテーブルに格納される。")
+  @DisplayName("ポストを作成するとPOSTテーブルに格納される。")
   void save() {
     // given
-    var post1 = createPostDto(1);
-    var post2 = createPostDto(2);
-    var post3 = createPostDto(3);
+    var member = Member.builder()
+        .name("テストメンバー")
+        .password("1q2w3e4r")
+        .email("test@test.com")
+        .build();
+    var post = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post.addMember(member);
 
     // when
-    postRepository.saveAll(List.of(post1, post2, post3));
+    postRepository.save(post);
 
     // then
     var posts = postRepository.findAll();
     assertThat(posts)
-        .hasSize(3)
-        .extracting("title", "content", "author")
+        .hasSize(1)
+        .extracting("title", "content")
         .containsExactlyInAnyOrder(
-            tuple("タイトル1", "コンテンツ1", "作成者1"),
-            tuple("タイトル2", "コンテンツ2", "作成者2"),
-            tuple("タイトル3", "コンテンツ3", "作成者3")
+            tuple("美味しいラーメンが食いたい。", "なら一蘭に行こう。ラーメンは豚骨だ。")
         );
   }
 }
