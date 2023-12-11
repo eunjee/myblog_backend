@@ -7,19 +7,25 @@
 :sectlinks:
 
 
-== 포스트 1건 조회(ポスト一件照会)
+== 포스트 등록
 === Request
 ==== http
-include::{snippets}/post-detail/http-request.adoc[]
-==== request param
-include::{snippets}/post-detail/path-parameters.adoc[]
-==== request body
-include::{snippets}/post-detail/request-body.adoc[]
+include::{snippets}/post-create/http-request.adoc[]
+==== request-body
+include::{snippets}/post-create/request-body.adoc[]
+==== request-fields
+include::{snippets}/post-create/request-fields.adoc[]
 
+== 포스트 등록 예외
+=== Request
+==== http
+include::{snippets}/post-create-title-required/http-request.adoc[]
+==== request-body
+include::{snippets}/post-create-title-required/request-body.adoc[]
 === Response
 ==== http
-include::{snippets}/post-detail/http-response.adoc[]
-==== response body
-include::{snippets}/post-detail/response-body.adoc[]
-==== response fields
-include::{snippets}/post-detail/response-fields.adoc[]
+include::{snippets}/post-create-title-required/http-response.adoc[]
+==== response-body
+include::{snippets}/post-create-title-required/response-body.adoc[]
+==== response-fields
+include::{snippets}/post-create-title-required/response-fields.adoc[]
