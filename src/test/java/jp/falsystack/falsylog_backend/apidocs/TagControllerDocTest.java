@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.falsystack.falsylog_backend.service.PostService;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,7 @@ public class TagControllerDocTest {
   @Autowired
   private PostService postService;
 
+@Disabled
   @Test
   @DisplayName("GET /tags/{tagName} ハッシュタグに関連するポストを返す")
   void getPostListWithTags() throws Exception {

@@ -165,11 +165,11 @@ public class PostControllerTest {
 
   @CustomWithMockUser
   @Test
-  @DisplayName("/post タイトルは1~20文字で入力しないとポスト登録に失敗する。")
+  @DisplayName("/post タイトルは1~30文字で入力しないとポスト登録に失敗する。")
   void postFail_Least_One_Word() throws Exception {
     // given
     var request = PostCreate.builder()
-        .title("美味しいラーメンが食いたいけど一蘭まで歩くのはキツイ。")
+        .title("美味しいラーメンが食いたいけど一蘭まで歩くのはキツイ.......................")
         .content("ならウーバーイーツがあるぞ")
         .hashTags(null)
         .build();
@@ -182,7 +182,7 @@ public class PostControllerTest {
         .andExpect(status().isBadRequest())
         .andExpectAll(
             jsonPath("$.message", is("잘못된 요청입니다")),
-            jsonPath("$.validation.title", is("제목은 1~20 글자로 작성해 주세요"))
+            jsonPath("$.validation.title", is("제목은 1~30 글자로 작성해 주세요"))
         )
         .andDo(print());
   }

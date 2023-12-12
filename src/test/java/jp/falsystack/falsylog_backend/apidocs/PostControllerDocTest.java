@@ -1,17 +1,24 @@
 package jp.falsystack.falsylog_backend.apidocs;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.NULL;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import jp.falsystack.falsylog_backend.annotation.CustomWithMockUser;
@@ -21,7 +28,9 @@ import jp.falsystack.falsylog_backend.request.post.PostCreate;
 import jp.falsystack.falsylog_backend.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.request.RequestDocumentation;
 
 public class PostControllerDocTest extends RestDocSupport {
 
@@ -34,13 +43,14 @@ public class PostControllerDocTest extends RestDocSupport {
 
   @CustomWithMockUser
   @Test
-  @DisplayName("/post, ポスト登録")
+  @DisplayName("/post ポスト登録")
   void postCreate() throws Exception {
     // given
     var request = PostCreate.builder()
-        .title("美味しいラーメンが食いたい。")
-        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-        .hashTags("#一蘭#Spring#React")
+        .title("새로운 리액트 문서에서 제시하는 9가지 권장 사항")
+        .content(
+            "일반적으로 새로운 소프트웨어 개발팀이 구성되면 팀이 코드를...")
+        .hashTags("#react#js#ts")
         .build();
     var json = objectMapper.writeValueAsString(request);
 
@@ -50,15 +60,22 @@ public class PostControllerDocTest extends RestDocSupport {
             .content(json))
         .andDo(document("post-create",
                 preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
                 requestFields(
-                    fieldWithPath("title").type(STRING).description("제목"),
-                    fieldWithPath("content").type(STRING).description("내용"),
-                    fieldWithPath("hashTags").type(STRING).description("#Spring#Java#Javascript")
+                    fieldWithPath("title").type(STRING).description("제목")
+                        .attributes(key("constraint").value("1~30자 이내")),
+                    fieldWithPath("content").type(STRING).description("내용")
+                        .attributes(key("constraint").value("10자 미만")),
+                    fieldWithPath("hashTags").type(STRING).description("해시태그")
                         .optional()
                 )
             )
         );
   }
+
+  /**
+   * title 検証
+   */
 
   @CustomWithMockUser
   @Test
@@ -67,8 +84,8 @@ public class PostControllerDocTest extends RestDocSupport {
     // given
     var request = PostCreate.builder()
         .title(null)
-        .content(null)
-        .hashTags("#一蘭#Spring#React")
+        .content("일반적으로 새로운 소프트웨어 개발팀이 구성되면 팀이 코드를...")
+        .hashTags("#react#js#ts")
         .build();
     String json = objectMapper.writeValueAsString(request);
 
@@ -77,38 +94,137 @@ public class PostControllerDocTest extends RestDocSupport {
             .contentType(APPLICATION_JSON)
             .content(json))
         .andDo(document("post-create-title-required",
+            preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
+            requestFields(
+                fieldWithPath("title").type(NULL).description("제목")
+                    .attributes(key("constraint").value("1~30자 이내")),
+                fieldWithPath("content").type(STRING).description("내용")
+                    .attributes(key("constraint").value("10자 미만")),
+                fieldWithPath("hashTags").type(STRING).description("해시태그")
+                    .optional()
+            ),
             responseFields(
-                fieldWithPath("message").type(STRING).description("잘못된 요청입니다"),
+                fieldWithPath("message").type(STRING).description("에러 메시지"),
                 fieldWithPath("validation.title").type(STRING)
-                    .description("제목을 입력해주세요"),
-                fieldWithPath("validation.content").type(STRING)
-                    .description("내용을 입력해주세요")
+                    .description("검증 실패 내용")
             )))
         .andDo(print());
   }
-//
-//  @Test
-//  @DisplayName("POST /post ポスト登録失敗 - 文字数制限")
-//  void postCreateFailedTitle2() throws Exception {
-//    // given
-//    var request = createPostRequesOptionaltDto("", "内容1234", "作成者", null);
-//    String json = objectMapper.writeValueAsString(request);
-//
-//    // expected
-//    mockMvc.perform(RestDocumentationRequestBuilders.post("/post")
-//            .contentType(APPLICATION_JSON)
-//            .content(json))
-//        .andDo(document("post-create-fail-length",
-//            responseFields(
-//                fieldWithPath("message").type(STRING).description("間違ったリクエストです。"),
-//                fieldWithPath("validation.title").type(STRING)
-//                    .description("タイトルは１文字以上２０文字以下で作成してください"),
-//                fieldWithPath("validation.content").type(STRING)
-//                    .description("１０文字以上作成してください。")
-//            )))
-//        .andDo(print());
-//  }
+
+  @CustomWithMockUser
+  @Test
+  @DisplayName("/post ポスト登録失敗 - タイトルは1~30文字で入力してください")
+  void postCreateFailedLength() throws Exception {
+    // given
+    var request = PostCreate.builder()
+        .title("새로운 리액트 문서에서 제시하는 9가지 권장 사항을 알아보자")
+        .content("일반적으로 새로운 소프트웨어 개발팀이 구성되면 팀이 코드를...")
+        .hashTags("#react#js#ts")
+        .build();
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andDo(document("post-create-title-length",
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
+            requestFields(
+                fieldWithPath("title").type(STRING).description("제목")
+                    .attributes(key("constraint").value("1~30자 이내")),
+                fieldWithPath("content").type(STRING).description("내용")
+                    .attributes(key("constraint").value("10자 미만")),
+                fieldWithPath("hashTags").type(STRING).description("해시태그")
+                    .optional()
+            ),
+            responseFields(
+                fieldWithPath("message").type(STRING).description("에러 메시지"),
+                fieldWithPath("validation.title").type(STRING)
+                    .description("검증 실패 내용")
+            )))
+        .andDo(print());
+  }
+
+  /**
+   * content 検証
+   */
+
+  @CustomWithMockUser
+  @Test
+  @DisplayName("/post ポスト登録失敗 - コンテンツは必須です")
+  void postCreateFailedContentRequired() throws Exception {
+    // given
+    var request = PostCreate.builder()
+        .title("새로운 리액트 문서에서 제시하는 9가지 권장 사항")
+        .content(null)
+        .hashTags("#react#js#ts")
+        .build();
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andDo(document("post-create-content-required",
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
+            requestFields(
+                fieldWithPath("title").type(STRING).description("제목")
+                    .attributes(key("constraint").value("1~30자 이내")),
+                fieldWithPath("content").type(NULL).description("내용")
+                    .attributes(key("constraint").value("10자 미만")),
+                fieldWithPath("hashTags").type(STRING).description("해시태그")
+                    .optional()
+            ),
+            responseFields(
+                fieldWithPath("message").type(STRING).description("에러 메시지"),
+                fieldWithPath("validation.content").type(STRING)
+                    .description("검증 실패 내용")
+            )))
+        .andDo(print());
+  }
+
+  @CustomWithMockUser
+  @Test
+  @DisplayName("/post ポスト登録失敗 - コンテンツは10文字以上で入力してください")
+  void postCreateFailedContentLength() throws Exception {
+    // given
+    var request = PostCreate.builder()
+        .title("새로운 리액트 문서에서 제시하는 9가지 권장 사항")
+        .content("일반적으로 새로운")
+        .hashTags("#react#js#ts")
+        .build();
+    String json = objectMapper.writeValueAsString(request);
+
+    // expected
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/post")
+            .contentType(APPLICATION_JSON)
+            .content(json))
+        .andDo(document("post-create-content-length",
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
+            requestFields(
+                fieldWithPath("title").type(STRING).description("제목")
+                    .attributes(key("constraint").value("1~30자 이내")),
+                fieldWithPath("content").type(STRING).description("내용")
+                    .attributes(key("constraint").value("10자 미만")),
+                fieldWithPath("hashTags").type(STRING).description("해시태그")
+                    .optional()
+            ),
+            responseFields(
+                fieldWithPath("message").type(STRING).description("에러 메시지"),
+                fieldWithPath("validation.content").type(STRING)
+                    .description("검증 실패 내용")
+            )))
+        .andDo(print());
+  }
+
+  /**
+   * 削除
+   */
+
 
 //  @Test
 //  @DisplayName("GET /post/{postId} ポスト詳細照会")
@@ -142,23 +258,7 @@ public class PostControllerDocTest extends RestDocSupport {
 //        .andDo(print());
 //  }
 //
-//  @Test
-//  @DisplayName("DELETE /post/{postId} ポスト一件削除")
-//  void deletePostById() throws Exception {
-//    // given
-//    var postDto1 = createPostDto(1);
-//    var savedPost = postRepository.save(postDto1);
-//
-//    // expected
-//    mockMvc.perform(delete("/post/{postId}", savedPost.getId())
-//            .contentType(APPLICATION_JSON))
-//        .andDo(document("post-delete",
-//            RequestDocumentation.pathParameters(
-//                RequestDocumentation.parameterWithName("postId").description("ポストID(게시글ID)")
-//            )
-//        ))
-//        .andDo(print());
-//  }
+
 //
 //  @Test
 //  @DisplayName("GET /posts,　ポスト一覧")

@@ -1,31 +1,79 @@
 = myblog API
 :doctype: book
 :toc: left
-:toclevels: 3
+:toclevels: 2
 :prettify-theme:
 :icons: font
 :sectlinks:
 
-
 == 포스트 등록
-=== Request
-==== http
+=== 등록
+==== 요청
+===== http
 include::{snippets}/post-create/http-request.adoc[]
-==== request-body
-include::{snippets}/post-create/request-body.adoc[]
-==== request-fields
+===== 요청 필드
 include::{snippets}/post-create/request-fields.adoc[]
+==== 응답
+include::{snippets}/post-create/http-response.adoc[]
 
 == 포스트 등록 예외
-=== Request
-==== http
+=== 제목 - 필수
+==== 요청
+===== http
 include::{snippets}/post-create-title-required/http-request.adoc[]
-==== request-body
-include::{snippets}/post-create-title-required/request-body.adoc[]
-=== Response
-==== http
+==== 요청 필드
+include::{snippets}/post-create-title-required/request-fields.adoc[]
+==== 응답
+===== http
 include::{snippets}/post-create-title-required/http-response.adoc[]
-==== response-body
-include::{snippets}/post-create-title-required/response-body.adoc[]
-==== response-fields
+===== 응답 필드
 include::{snippets}/post-create-title-required/response-fields.adoc[]
+---
+
+=== 제목 - 글자 수 제한
+==== 요청
+===== http
+include::{snippets}/post-create-title-length/http-request.adoc[]
+==== 요청 필드
+include::{snippets}/post-create-title-length/request-fields.adoc[]
+==== 응답
+===== http
+include::{snippets}/post-create-title-length/http-response.adoc[]
+===== 응답 필드
+include::{snippets}/post-create-title-length/response-fields.adoc[]
+---
+
+=== 내용 - 필수
+==== 요청
+===== http
+include::{snippets}/post-create-content-required/http-request.adoc[]
+==== 요청 필드
+include::{snippets}/post-create-content-required/request-fields.adoc[]
+==== 응답
+===== http
+include::{snippets}/post-create-content-required/http-response.adoc[]
+===== 응답 필드
+include::{snippets}/post-create-content-required/response-fields.adoc[]
+---
+
+=== 내용 - 글자 수 제한
+==== 요청
+===== http
+include::{snippets}/post-create-content-length/http-request.adoc[]
+==== 요청 필드
+include::{snippets}/post-create-content-length/request-fields.adoc[]
+==== 응답
+===== http
+include::{snippets}/post-create-content-length/http-response.adoc[]
+===== 응답 필드
+include::{snippets}/post-create-content-length/response-fields.adoc[]
+
+== 포스트 삭제
+=== 삭제
+==== 요청
+===== http
+include::{snippets}/post-delete/http-request.adoc[]
+===== 요청 필드
+include::{snippets}/post-delete/path-parameters.adoc[]
+==== 응답
+include::{snippets}/post-delete/http-response.adoc[]

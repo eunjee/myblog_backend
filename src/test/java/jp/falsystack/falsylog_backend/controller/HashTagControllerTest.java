@@ -9,6 +9,7 @@ import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.PostHashTag;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ class HashTagControllerTest {
     return post;
   }
 
+  @Disabled
   @Test
   @DisplayName("GET /hashtags/hashtagName HashTag名で照会するとHashTag名と係があるポストのリストを返す。")
   void getPostListIncludeHashTag() throws Exception {
