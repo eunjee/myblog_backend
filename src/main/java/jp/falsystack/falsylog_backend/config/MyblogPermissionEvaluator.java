@@ -28,8 +28,8 @@ public class MyblogPermissionEvaluator implements PermissionEvaluator {
     var post = postRepository.findById((Long) targetId)
         .orElseThrow(PostNotFound::new);
 
-    if (!post.getMemberId().equals(principal.getUserId())) {
-      log.error("[인가 실패] 해당 사용자가 작성한 글이 아닙니다. targetId = {}, userId = {}", targetId,
+    if (post.getMemberId().intValue() != principal.getUserId().intValue()) {
+      log.error("[인가 실패] 해당 사용자가 작성한 글이 아닙니다. post.getMemberId = {}, userId = {}", post.getMemberId(),
           principal.getUserId());
       return false;
     }

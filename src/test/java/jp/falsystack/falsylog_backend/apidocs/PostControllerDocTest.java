@@ -1,11 +1,7 @@
 package jp.falsystack.falsylog_backend.apidocs;
 
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
@@ -20,25 +16,52 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.PersistenceContext;
 import jp.falsystack.falsylog_backend.annotation.CustomWithMockUser;
-import jp.falsystack.falsylog_backend.apidocs.config.RestDocSupport;
-import jp.falsystack.falsylog_backend.controller.PostController;
+import jp.falsystack.falsylog_backend.domain.Member;
+import jp.falsystack.falsylog_backend.domain.Post;
+import jp.falsystack.falsylog_backend.repository.MemberRepository;
+import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
-import jp.falsystack.falsylog_backend.service.PostService;
+import jp.falsystack.falsylog_backend.service.dto.PostWrite;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.request.RequestDocumentation;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-public class PostControllerDocTest extends RestDocSupport {
+@SpringBootTest
+@AutoConfigureRestDocs
+@AutoConfigureMockMvc
+public class PostControllerDocTest {
 
-  private final PostService postService = mock(PostService.class);
+  @Autowired
+  private MockMvc mockMvc;
 
-  @Override
-  protected Object initController() {
-    return new PostController(postService);
+  @Autowired
+  private PostRepository postRepository;
+
+  @Autowired
+  private MemberRepository memberRepository;
+
+  @Autowired
+  private ObjectMapper objectMapper;
+
+
+  @AfterEach
+  void tearDown() {
+    postRepository.deleteAllInBatch();
+    memberRepository.deleteAllInBatch();
   }
 
   @CustomWithMockUser
@@ -58,6 +81,7 @@ public class PostControllerDocTest extends RestDocSupport {
     mockMvc.perform(post("/post")
             .contentType(APPLICATION_JSON)
             .content(json))
+        .andExpect(status().isOk())
         .andDo(document("post-create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
@@ -224,39 +248,38 @@ public class PostControllerDocTest extends RestDocSupport {
   /**
    * 削除
    */
+  @Transactional
+  @CustomWithMockUser
+  @Test
+  @DisplayName("DELETE /post/{postId} ポスト削除")
+  void deleteById() throws Exception {
+    // given
+    var member = memberRepository.findAll().get(0);
 
+    var post = Post.builder()
+        .title("새로운 리액트 문서에서 제시하는 9가지 권장 사항")
+        .content(
+            "일반적으로 새로운 소프트웨어 개발팀이 구성되면 팀이 코드를...")
+        .build();
+    post.addMember(member);
+    var savedPost = postRepository.save(post);
 
-//  @Test
-//  @DisplayName("GET /post/{postId} ポスト詳細照会")
-//  void getPostById() throws Exception {
-//    // given
-//    var postDto1 = createPostEntityOptional(1);
-//    var savedPost = postRepository.save(postDto1);
-//
-//    // expected
-//    mockMvc.perform(get("/post/{postId}", savedPost.getId())
-//            .contentType(APPLICATION_JSON))
-//        .andDo(document("post-detail",
-//            preprocessRequest(prettyPrint()),
-//            preprocessResponse(prettyPrint()),
-//            RequestDocumentation.pathParameters(
-//                RequestDocumentation.parameterWithName("postId").description("게시글ID") // ポストID
-//            ),
-//            responseFields(
-//                fieldWithPath("id").type(NUMBER).description("ID")
-//                    .attributes(Attributes.key("constraint").value("필수필수")),
-//                fieldWithPath("title").type(STRING).description("타이틀"), // タイトル
-//                fieldWithPath("content").type(STRING).description("컨텐츠"), // コンテンツ
-//                fieldWithPath("author").type(STRING).description("작성자"), // 作成者
-//                fieldWithPath("hashTags").type(ARRAY).description("hashtag 목록"),
-//                fieldWithPath("hashTags.name").type(STRING).description("태그이름").optional(),
-//                // hash tag name
-//                fieldWithPath("createdAt").type(STRING).description("작성일"), // 作成日
-//                fieldWithPath("updatedAt").type(STRING).description("갱신일") // 更新日
-//            )
-//        ))
-//        .andDo(print());
-//  }
+    // expected
+    mockMvc.perform(delete("/post/{postId}", savedPost.getId()))
+        .andExpect(status().isOk())
+        .andDo(document("post-delete",
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
+            RequestDocumentation.pathParameters(
+                RequestDocumentation
+                    .parameterWithName("postId")
+                    .description("게시글 ID")
+                    .attributes(key("constraint").value("NOT NULL, Long"))
+            )
+        )).andDo(print());
+
+  }
+
 //
 
 //
