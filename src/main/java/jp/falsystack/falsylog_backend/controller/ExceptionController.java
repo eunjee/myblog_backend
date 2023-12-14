@@ -1,12 +1,11 @@
 package jp.falsystack.falsylog_backend.controller;
 
-import java.util.List;
 import jp.falsystack.falsylog_backend.exception.MyBlogException;
 import jp.falsystack.falsylog_backend.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,10 +34,15 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public ErrorResponse typeMisMatchHandler(MethodArgumentTypeMismatchException e) {
+    var typeMismatchMessage = "타입이 맞지 않습니다.";
 
-    return ErrorResponse.builder()
-        .message(MESSAGE) // 間違ったリクエストです。
+    var errorResponse = ErrorResponse.builder()
+        .message(MESSAGE)
         .build();
+
+    errorResponse.addValidation(e.getName(), typeMismatchMessage);
+
+    return errorResponse;
   }
 
   @ExceptionHandler(MyBlogException.class)
@@ -51,6 +55,23 @@ public class ExceptionController {
 
     return ResponseEntity
         .status(e.getStatusCode())
+        .body(errorResponse);
+  }
+
+  /**
+   * 認証失敗
+   */
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> exception(AccessDeniedException e) {
+    log.error("[認証エラー]", e);
+    var accessDeniedMessage = "인증이 필요합니다";
+
+    var errorResponse = ErrorResponse.builder()
+        .message(accessDeniedMessage)
+        .build();
+
+    return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
         .body(errorResponse);
   }
 
@@ -67,4 +88,5 @@ public class ExceptionController {
         .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
         .body(errorResponse);
   }
+
 }

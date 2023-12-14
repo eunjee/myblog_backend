@@ -6,6 +6,7 @@
 :icons: font
 :sectlinks:
 
+// 포스트 등록
 == 포스트 등록
 === 등록
 ==== 요청
@@ -68,6 +69,7 @@ include::{snippets}/post-create-content-length/http-response.adoc[]
 ===== 응답 필드
 include::{snippets}/post-create-content-length/response-fields.adoc[]
 
+// 포스트 삭제
 == 포스트 삭제
 === 삭제
 ==== 요청
@@ -77,3 +79,40 @@ include::{snippets}/post-delete/http-request.adoc[]
 include::{snippets}/post-delete/path-parameters.adoc[]
 ==== 응답
 include::{snippets}/post-delete/http-response.adoc[]
+
+== 포스트 삭제 예외
+=== 삭제 - 경로변수 타입 불일치
+==== 요청
+===== http
+include::{snippets}/post-delete-invalid-path-variable/http-request.adoc[]
+===== 요청 필드
+include::{snippets}/post-delete-invalid-path-variable/path-parameters.adoc[]
+==== 응답
+===== http
+include::{snippets}/post-delete-invalid-path-variable/http-response.adoc[]
+===== 응답 필드
+include::{snippets}/post-delete-invalid-path-variable/response-fields.adoc[]
+
+// 포스트 조회
+== 포스트 조회
+=== 단건 조회
+==== 요청
+===== http
+include::{snippets}/post-detail/http-request.adoc[]
+===== 요청 필드
+include::{snippets}/post-detail/path-parameters.adoc[]
+==== 응답
+===== http
+include::{snippets}/post-detail/http-response.adoc[]
+===== 응답 필드
+include::{snippets}/post-detail/response-fields.adoc[]
+
+=== 목록 조회
+==== 요청
+===== http
+include::{snippets}/post-list/http-request.adoc[]
+==== 응답
+===== http
+include::{snippets}/post-list/http-response.adoc[]
+===== 응답 필드
+include::{snippets}/post-list/response-fields.adoc[]

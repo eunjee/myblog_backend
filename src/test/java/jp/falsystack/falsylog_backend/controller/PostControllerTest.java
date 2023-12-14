@@ -393,5 +393,4 @@ public class PostControllerTest {
         .andDo(print());
   }
 
-
 }

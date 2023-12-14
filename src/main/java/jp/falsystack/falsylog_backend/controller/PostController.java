@@ -1,6 +1,8 @@
 package jp.falsystack.falsylog_backend.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import jp.falsystack.falsylog_backend.config.UserPrincipal;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
@@ -36,7 +38,8 @@ public class PostController {
   }
 
   @GetMapping("/post/{postId}")
-  public PostResponse getPost(@PathVariable Long postId) {
+  public PostResponse getPost(
+      @Valid @Positive @PathVariable Long postId) {
     return postService.getPost(postId);
   }
 
