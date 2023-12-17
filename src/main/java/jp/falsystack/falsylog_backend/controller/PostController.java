@@ -29,11 +29,20 @@ public class PostController {
 
   private final PostService postService;
 
-  @PreAuthorize("hasRole('ADMIN')")
+  // TODO: クライアントからな要求でログインページが完了するまでは認証処理させない。
+//  @PreAuthorize("hasRole('ADMIN')")
+//  @PostMapping("/post")
+//  public void createPost(@AuthenticationPrincipal UserPrincipal userPrincipal,
+//      @RequestBody @Valid PostCreate postCreate) {
+//    PostWrite postWrite = PostWrite.of(postCreate, userPrincipal.getUserId());
+//    postService.write(postWrite);
+//  }
+
   @PostMapping("/post")
   public void createPost(@AuthenticationPrincipal UserPrincipal userPrincipal,
       @RequestBody @Valid PostCreate postCreate) {
-    PostWrite postWrite = PostWrite.of(postCreate, userPrincipal.getUserId());
+    // TODO: クライアントからな要求でログインページが完了するまでは認証処理させない。
+    PostWrite postWrite = PostWrite.of(postCreate, userPrincipal == null ? 1L : userPrincipal.getUserId());
     postService.write(postWrite);
   }
 
@@ -43,7 +52,8 @@ public class PostController {
     return postService.getPost(postId);
   }
 
-  @PreAuthorize("hasRole('ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
+  // TODO: クライアントからな要求でログインページが完了するまでは認証処理させない。
+  // @PreAuthorize("hasRole('ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
   @DeleteMapping("/post/{postId}")
   public void deletePost(@PathVariable Long postId) {
     postService.delete(postId);
