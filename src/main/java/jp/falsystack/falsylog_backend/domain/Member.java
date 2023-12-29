@@ -1,6 +1,5 @@
 package jp.falsystack.falsylog_backend.domain;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +26,8 @@ public class Member extends BaseEntity {
   private String email;
   private String password;
   private LocalDateTime createdAt; // TODO: BaseEntity 의 createdAt와 중복되어서 현재 값이 안들어감 필드명 변경 필요
-  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+
+  @OneToMany(mappedBy = "member")
   private List<Post> posts = new ArrayList<>();
 
   // TODO:　ROLE追加必要

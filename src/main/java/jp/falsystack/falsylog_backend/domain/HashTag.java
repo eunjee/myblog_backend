@@ -26,13 +26,15 @@ import org.hibernate.validator.constraints.UniqueElements;
 @Table(uniqueConstraints = {@UniqueConstraint(name = "unique_name", columnNames = {"name"})})
 public class HashTag {
 
-  @JsonBackReference
-  @OneToMany(mappedBy = "hashTag", cascade = CascadeType.ALL)
-  private final List<PostHashTag> postHashTags = new ArrayList<>();
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "tag_id")
   private Long id;
+
+  @JsonBackReference
+  @OneToMany(mappedBy = "hashTag", cascade = CascadeType.ALL)
+  private final List<PostHashTag> postHashTags = new ArrayList<>();
+
   private String name;
 
   @Builder
