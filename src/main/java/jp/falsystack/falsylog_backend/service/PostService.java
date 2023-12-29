@@ -38,7 +38,7 @@ public class PostService {
 
     if (StringUtils.hasText(postWrite.getHashTags())) {
       var postHashTags = new ArrayList<PostHashTag>();
-      var pattern = Pattern.compile("#([0-9a-zA-Z가-힣ぁ-んァ-ヶー一-龯]*)");
+      var pattern = Pattern.compile("#([0-9a-zA-Z가-힣ぁ-んァ-ヶー一-龯ㄱ-ㅎ]*)");
       var matcher = pattern.matcher(postWrite.getHashTags());
 
       while (matcher.find()) {
