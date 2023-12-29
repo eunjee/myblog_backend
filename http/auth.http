@@ -1,9 +1,9 @@
 ### auth - signin
-POST http://localhost:8080/auth/login
+POST https://falsystack.jp/auth/login
 Content-Type: application/json
 
 {
-  "email": "signup@test.com",
+  "email": "test@test.com",
   "password": "1q2w3e4r"
 }
 
@@ -15,12 +15,13 @@ username=signup@test.com&password=1q2w3e4r
 
 
 ### signup
-POST http://localhost:8080/auth/signup
+#POST http://localhost:8080/auth/signup
+POST https://falsystack.jp/auth/signup
 Content-Type: application/json
 
 {
-  "name": "signup-test",
-  "email": "signup@test.com",
+  "name": "test-user",
+  "email": "test@test.com",
   "password": "1q2w3e4r"
 }
 

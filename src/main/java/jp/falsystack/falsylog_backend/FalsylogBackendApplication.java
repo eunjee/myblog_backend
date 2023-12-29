@@ -26,7 +26,7 @@ public class FalsylogBackendApplication {
   }
 
   // TODO: クライアントからな要求でログインページが完了するまでは認証処理させない。
-  @PostConstruct
+  @PostConstruct // TODO: PostConstructorは良くないから @EventListenerに変えよう
   public void initData() {
     var member = Member.of("test-user",
         "test@test.com",

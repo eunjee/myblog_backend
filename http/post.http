@@ -1,14 +1,15 @@
 ### Post-Create
-POST http://localhost:8080/post
+#POST http://localhost:8080/post
+POST https://falsystack.jp/post
 Content-Type: application/json
 #Set-Cookie: SESSION=4b3e264d-1f05-40ba-9e4f-082a4bb4a01d
 #Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzAxMDEyNzkxfQ.kncubajJtz1y-jGwGqqbk_x6vhqxYOSSzDR8siWp3II
 
 {
-  "author": "kakao",
-  "content": "testコンテンツです。",
+  "author": "궁금",
+  "content": "데이터는 왜 날라 갔을까요?",
   "hashTags": "#javascript#nextjs#java",
-  "title": "テスト2"
+  "title": "테스트입니다."
 }
 
 ### Post-Detail
