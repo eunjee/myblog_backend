@@ -40,8 +40,7 @@ public class PostController {
   public void createPost(@AuthenticationPrincipal UserPrincipal userPrincipal,
       @RequestBody @Valid PostCreate postCreate) {
     // TODO: クライアントからな要求でログインページが完了するまでは認証処理させない。
-//    PostWrite postWrite = PostWrite.of(postCreate, userPrincipal == null ? 1L : userPrincipal.getUserId());
-    PostWrite postWrite = PostWrite.of(postCreate, 1L);
+    PostWrite postWrite = PostWrite.of(postCreate, userPrincipal == null ? 1L : userPrincipal.getUserId());
     postService.write(postWrite);
   }
 
