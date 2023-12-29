@@ -18,7 +18,6 @@ import jp.falsystack.falsylog_backend.request.post.PostSearch;
 import jp.falsystack.falsylog_backend.response.PostResponse;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,5 +177,41 @@ class PostServiceTest {
             tuple("美味しいラーメンが食いたい。", "なら一蘭に行こう。ラーメンは豚骨だ。"),
             tuple("美味しいラーメンが食いたい。", "なら一蘭に行こう。ラーメンは豚骨だ。")
         );
+  }
+
+  @Test
+  @DisplayName("指定IDのポストを削除する")
+  void deletePost() {
+    // given
+    var member = Member.builder()
+        .name("テストメンバー")
+        .password("1q2w3e4r")
+        .email("test@test.com")
+        .build();
+    var post1 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post1.addMember(member);
+
+    var post2 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post2.addMember(member);
+
+    var post3 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post3.addMember(member);
+    postRepository.saveAll(List.of(post1, post2, post3));
+
+    // when
+    postService.delete(post1.getId());
+
+    // then
+    assertThat(postRepository.findAll().size()).isEqualTo(2);
+    assertThatThrownBy(() -> postService.getPost(post1.getId())).isInstanceOf(PostNotFound.class);
   }
 }
