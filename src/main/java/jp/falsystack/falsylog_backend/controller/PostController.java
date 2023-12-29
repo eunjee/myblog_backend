@@ -1,7 +1,6 @@
 package jp.falsystack.falsylog_backend.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import jp.falsystack.falsylog_backend.config.UserPrincipal;
@@ -12,7 +11,6 @@ import jp.falsystack.falsylog_backend.service.PostService;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +40,8 @@ public class PostController {
   public void createPost(@AuthenticationPrincipal UserPrincipal userPrincipal,
       @RequestBody @Valid PostCreate postCreate) {
     // TODO: クライアントからな要求でログインページが完了するまでは認証処理させない。
-    PostWrite postWrite = PostWrite.of(postCreate, userPrincipal == null ? 1L : userPrincipal.getUserId());
+//    PostWrite postWrite = PostWrite.of(postCreate, userPrincipal == null ? 1L : userPrincipal.getUserId());
+    PostWrite postWrite = PostWrite.of(postCreate, 1L);
     postService.write(postWrite);
   }
 

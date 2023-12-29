@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import jp.falsystack.falsylog_backend.domain.HashTag;
-import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.PostHashTag;
 import jp.falsystack.falsylog_backend.exception.MemberNotFound;
 import jp.falsystack.falsylog_backend.exception.PostNotFound;
@@ -35,6 +34,7 @@ public class PostService {
 
     var member = memberRepository.findById(postWrite.getMemberId())
         .orElseThrow(MemberNotFound::new);
+    post.addMember(member);
 
     if (StringUtils.hasText(postWrite.getHashTags())) {
       var postHashTags = new ArrayList<PostHashTag>();
@@ -54,7 +54,6 @@ public class PostService {
         postHashTags.add(postHashTag);
 
       }
-      post.addMember(member);
       post.addPostHashTags(postHashTags);
     }
     postRepository.save(post);

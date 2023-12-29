@@ -20,6 +20,7 @@ import jp.falsystack.falsylog_backend.repository.MemberRepository;
 import jp.falsystack.falsylog_backend.repository.PostHashTagRepository;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -315,18 +317,31 @@ public class PostControllerTest {
     // given
     // 先に保存されたMockUserのデータを呼び出す
     var member = memberRepository.findAll().get(0);
-    var post = Post.builder()
+    var post1 = Post.builder()
         .title("美味しいラーメンが食いたい。")
         .content("なら一蘭に行こう。ラーメンは豚骨だ。")
         .build();
-    post.addMember(member);
-    var savedPost = postRepository.save(post);
+    post1.addMember(member);
+    var post2 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post2.addMember(member);
+    var post3 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post3.addMember(member);
+    postRepository.saveAll(List.of(post1, post2, post3));
+    assertThat(postRepository.findAll().size()).isEqualTo(3);
 
     // expected
-    mockMvc.perform(MockMvcRequestBuilders.delete("/post/{potId}", savedPost.getId())
+    mockMvc.perform(MockMvcRequestBuilders.delete("/post/{potId}", post1.getId())
             .contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(print());
+
+    assertThat(postRepository.findAll().size()).isEqualTo(2);
   }
 
   @CustomWithMockUser
