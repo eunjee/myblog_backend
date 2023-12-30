@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import jp.falsystack.falsylog_backend.service.dto.PostEdit;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +50,7 @@ public class Post extends BaseEntity {
   }
 
   public void addPostHashTags(List<PostHashTag> postHashTags) {
+    this.postHashTags.clear();
     this.postHashTags.addAll(postHashTags);
   }
 
@@ -63,5 +65,10 @@ public class Post extends BaseEntity {
 
   public Long getMemberId() {
     return member.getId();
+  }
+
+  public void edit(PostEdit edit) {
+    this.title = edit.getTitle();
+    this.content = edit.getContent();
   }
 }

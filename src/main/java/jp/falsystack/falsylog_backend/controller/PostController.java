@@ -6,6 +6,7 @@ import java.util.List;
 import jp.falsystack.falsylog_backend.config.UserPrincipal;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
 import jp.falsystack.falsylog_backend.request.post.PostSearch;
+import jp.falsystack.falsylog_backend.request.post.PostUpdate;
 import jp.falsystack.falsylog_backend.response.PostResponse;
 import jp.falsystack.falsylog_backend.service.PostService;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +42,8 @@ public class PostController {
   public void createPost(@AuthenticationPrincipal UserPrincipal userPrincipal,
       @RequestBody @Valid PostCreate postCreate) {
     // TODO: クライアントからな要求でログインページが完了するまでは認証処理させない。
-    PostWrite postWrite = PostWrite.of(postCreate, userPrincipal == null ? 1L : userPrincipal.getUserId());
+    PostWrite postWrite = PostWrite.of(postCreate,
+        userPrincipal == null ? 1L : userPrincipal.getUserId());
     postService.write(postWrite);
   }
 
@@ -62,6 +65,11 @@ public class PostController {
     return postService.getPosts(request);
   }
 
-  // TODO: editコントローラーの作成必要
+  @PutMapping("/post/{postId}")
+  public void update(
+      @RequestBody @Valid PostUpdate postUpdate,
+      @Valid @Positive @PathVariable Long postId) {
+    postService.update(postId, postUpdate.toPostEdit());
+  }
 
 }
