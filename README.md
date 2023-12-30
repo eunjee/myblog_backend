@@ -23,6 +23,9 @@
 - CI/CDの経験
 
 ## commits
+### 2023.12.30
+- [x] post update機能実装
+- [x] post updateテスト実装
 ### 2023.12.29
 - [x] @EventListenerの導入
 - [x] ポスト削除テストの追加

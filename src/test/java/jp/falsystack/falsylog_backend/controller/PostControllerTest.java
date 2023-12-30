@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.stream.Stream;
 import jp.falsystack.falsylog_backend.annotation.CustomWithMockUser;
 import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Member;
@@ -20,6 +21,7 @@ import jp.falsystack.falsylog_backend.repository.MemberRepository;
 import jp.falsystack.falsylog_backend.repository.PostHashTagRepository;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
+import jp.falsystack.falsylog_backend.request.post.PostUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -407,5 +409,60 @@ public class PostControllerTest {
         )
         .andDo(print());
   }
+
+  /**
+   * Post更新
+   */
+  @CustomWithMockUser
+  @Transactional
+  @Test
+  @DisplayName("/post/{postId} クライアントから受け取ったpostIdとポストの全ての値を元にポストを更新する")
+  void updatePost() throws Exception {
+    // given
+    // 先に保存されたMockUserのデータを呼び出す
+    var member = memberRepository.findAll().get(0);
+    var post1 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    post1.addMember(member);
+    var post2 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    var hashTag = HashTag.builder()
+        .name("#ラーメン")
+        .build();
+    var postHashTag = PostHashTag.builder()
+        .build();
+    postHashTag.addPost(post2);
+    postHashTag.addHashTag(hashTag);
+    post2.addMember(member);
+    postRepository.saveAll(List.of(post1, post2));
+
+    var postUpdate = PostUpdate.builder()
+        .title("今日は焼肉を食べよう")
+        .content("美味しい焼肉店をGoogle Mapから探しましょう")
+        .hashTags("#Spring#Java#Kakao")
+        .build();
+    String json = objectMapper.writeValueAsString(postUpdate);
+
+    // when
+    mockMvc.perform(MockMvcRequestBuilders.put("/post/{postId}", post2.getId())
+            .contentType(APPLICATION_JSON)
+            .content(json)
+        ).andExpect(status().isOk())
+        .andDo(print());
+
+    // then
+    var findPost = postRepository.findById(post2.getId()).get();
+    assertThat(findPost.getTitle()).isEqualTo("今日は焼肉を食べよう");
+    assertThat(findPost.getContent()).isEqualTo("美味しい焼肉店をGoogle Mapから探しましょう");
+    var names = findPost.getPostHashTags().stream()
+        .map(p -> p.getHashTag().getName());
+    assertThat(names).hasSize(3).containsExactly("#Spring", "#Java", "#Kakao");
+
+  }
+
 
 }

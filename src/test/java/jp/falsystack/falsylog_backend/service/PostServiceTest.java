@@ -5,9 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
+import java.util.Optional;
 import jp.falsystack.falsylog_backend.annotation.CustomWithMockUser;
+import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Member;
 import jp.falsystack.falsylog_backend.domain.Post;
+import jp.falsystack.falsylog_backend.domain.PostHashTag;
 import jp.falsystack.falsylog_backend.exception.PostNotFound;
 import jp.falsystack.falsylog_backend.repository.HashTagRepository;
 import jp.falsystack.falsylog_backend.repository.MemberRepository;
@@ -16,12 +19,14 @@ import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
 import jp.falsystack.falsylog_backend.request.post.PostSearch;
 import jp.falsystack.falsylog_backend.response.PostResponse;
+import jp.falsystack.falsylog_backend.service.dto.PostEdit;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class PostServiceTest {
@@ -213,5 +218,48 @@ class PostServiceTest {
     // then
     assertThat(postRepository.findAll().size()).isEqualTo(2);
     assertThatThrownBy(() -> postService.getPost(post1.getId())).isInstanceOf(PostNotFound.class);
+  }
+
+  @Test
+  @Transactional
+  @DisplayName("ポストのIDと受け取った値を元に更新を行う")
+  void updatePost() {
+    // given
+    var member = Member.builder()
+        .name("テストメンバー")
+        .password("1q2w3e4r")
+        .email("test@test.com")
+        .build();
+    var post1 = Post.builder()
+        .title("美味しいラーメンが食いたい。")
+        .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+        .build();
+    var hashTag = HashTag.builder()
+        .name("#ラーメン")
+        .build();
+    var postHashTag = PostHashTag.builder()
+        .build();
+
+    post1.addMember(member);
+    postHashTag.addPost(post1);
+    postHashTag.addHashTag(hashTag);
+    postRepository.save(post1);
+
+    var postEdit = PostEdit.builder()
+        .title("美味しい焼肉が食いたい。")
+        .content("美味しい焼肉店をGoogle Mapから探しましょう")
+        .hashTags("#焼肉#カルビ#Java")
+        .build();
+
+    // when
+    postService.update(post1.getId(), postEdit);
+
+    // then
+    var findPost = postRepository.findById(post1.getId()).get();
+    assertThat(findPost.getTitle()).isEqualTo("美味しい焼肉が食いたい。");
+    assertThat(findPost.getContent()).isEqualTo("美味しい焼肉店をGoogle Mapから探しましょう");
+    var names = findPost.getPostHashTags().stream()
+        .map(p -> p.getHashTag().getName());
+    assertThat(names).hasSize(3).containsExactly("#焼肉", "#カルビ", "#Java");
   }
 }
