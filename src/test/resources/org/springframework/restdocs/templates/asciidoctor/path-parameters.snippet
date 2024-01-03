@@ -1,0 +1,10 @@
+.+{{path}}+
+|===
+|파라미터|설명|제약
+
+{{#parameters}}
+|{{#tableCellContent}}`+{{name}}+`{{/tableCellContent}}
+|{{#tableCellContent}}{{description}}{{/tableCellContent}}
+|{{#constraint}}{{.}}{{/constraint}}
+{{/parameters}}
+|===

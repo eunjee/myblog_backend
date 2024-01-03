@@ -116,3 +116,17 @@ include::{snippets}/post-list/http-request.adoc[]
 include::{snippets}/post-list/http-response.adoc[]
 ===== 응답 필드
 include::{snippets}/post-list/response-fields.adoc[]
+
+// 포스트 갱신
+== 포스트 갱신
+=== 갱신
+==== 요청
+===== http
+include::{snippets}/post-update/http-request.adoc[]
+===== 요청 path-parameter
+include::{snippets}/post-update/path-parameters.adoc[]
+===== 요청 필드
+include::{snippets}/post-update/request-fields.adoc[]
+==== 응답
+===== http
+include::{snippets}/post-update/http-response.adoc[]
