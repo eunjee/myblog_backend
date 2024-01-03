@@ -9,6 +9,7 @@ import jp.falsystack.falsylog_backend.config.UserPrincipal;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
 import jp.falsystack.falsylog_backend.request.post.PostSearch;
 import jp.falsystack.falsylog_backend.request.post.PostUpdate;
+import jp.falsystack.falsylog_backend.response.PostListResponse;
 import jp.falsystack.falsylog_backend.response.PostResponse;
 import jp.falsystack.falsylog_backend.service.PostService;
 import jp.falsystack.falsylog_backend.service.dto.PostWrite;
@@ -56,7 +57,7 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getPosts(@ModelAttribute PostSearch request) {
+    public PostListResponse getPosts(@ModelAttribute PostSearch request) {
         return postService.getPosts(request);
     }
 

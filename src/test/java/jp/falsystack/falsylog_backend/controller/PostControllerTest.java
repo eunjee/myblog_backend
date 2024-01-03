@@ -401,11 +401,13 @@ public class PostControllerTest {
     mockMvc.perform(get("/posts")
             .contentType(APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.length()", is(3)))
+        .andExpect(jsonPath("$.isLast", is(true)))
+        .andExpect(jsonPath("$.totalLength", is(3)))
+        .andExpect(jsonPath("$.lastPage", is(1)))
         .andExpectAll(
-            jsonPath("$[0].title", is("美味しいラーメンが食いたい。")),
-            jsonPath("$[0].content", is("なら一蘭に行こう。ラーメンは豚骨だ。")),
-            jsonPath("$[0].author", is("テストメンバー"))
+            jsonPath("$.postResponses.[0].title", is("美味しいラーメンが食いたい。")),
+            jsonPath("$.postResponses.[0].content", is("なら一蘭に行こう。ラーメンは豚骨だ。")),
+            jsonPath("$.postResponses.[0].author", is("テストメンバー"))
         )
         .andDo(print());
   }
@@ -461,7 +463,6 @@ public class PostControllerTest {
     var names = findPost.getPostHashTags().stream()
         .map(p -> p.getHashTag().getName());
     assertThat(names).hasSize(3).containsExactly("#Spring", "#Java", "#Kakao");
-
   }
 
 

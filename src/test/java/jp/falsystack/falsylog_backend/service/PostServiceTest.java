@@ -175,8 +175,11 @@ class PostServiceTest {
     var posts = postService.getPosts(new PostSearch());
 
     // then
-    assertThat(posts.get(0)).isInstanceOf(PostResponse.class);
-    assertThat(posts).hasSize(3).extracting("title", "content")
+    assertThat(posts.getIsLast()).isTrue();
+    assertThat(posts.getTotalLength()).isEqualTo(3);
+    assertThat(posts.getLastPage()).isEqualTo(1);
+
+    assertThat(posts.getPostResponses()).hasSize(3).extracting("title", "content")
         .containsExactlyInAnyOrder(
             tuple("美味しいラーメンが食いたい。", "なら一蘭に行こう。ラーメンは豚骨だ。"),
             tuple("美味しいラーメンが食いたい。", "なら一蘭に行こう。ラーメンは豚骨だ。"),

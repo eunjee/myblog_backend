@@ -9,6 +9,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.JsonFieldType.NULL;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -22,6 +23,7 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -34,6 +36,7 @@ import jp.falsystack.falsylog_backend.repository.MemberRepository;
 import jp.falsystack.falsylog_backend.repository.PostHashTagRepository;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
 import jp.falsystack.falsylog_backend.request.post.PostCreate;
+import jp.falsystack.falsylog_backend.request.post.PostUpdate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,6 +45,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -363,13 +367,16 @@ public class PostControllerDocTest {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 responseFields(
-                                        fieldWithPath("[].id").type(NUMBER).description("아이디"),
-                                        fieldWithPath("[].title").type(STRING).description("제목"),
-                                        fieldWithPath("[].content").type(STRING).description("내용"),
-                                        fieldWithPath("[].author").type(STRING).description("작성자"),
-                                        fieldWithPath("[].hashTags").type(ARRAY).description("해시태그 목록").optional(),
-                                        fieldWithPath("[].createdAt").type(STRING).description("작성일"),
-                                        fieldWithPath("[].updatedAt").type(STRING).description("갱신일")
+                                        fieldWithPath("isLast").type(BOOLEAN).description("마지막 페이지 확인용 플래그"),
+                                        fieldWithPath("totalLength").type(NUMBER).description("게시글 전체 갯수"),
+                                        fieldWithPath("lastPage").type(NUMBER).description("마지막 페이지 번호"),
+                                        fieldWithPath("postResponses.[].id").type(NUMBER).description("아이디"),
+                                        fieldWithPath("postResponses.[].title").type(STRING).description("제목"),
+                                        fieldWithPath("postResponses.[].content").type(STRING).description("내용"),
+                                        fieldWithPath("postResponses.[].author").type(STRING).description("작성자"),
+                                        fieldWithPath("postResponses.[].hashTags").type(ARRAY).description("해시태그 목록").optional(),
+                                        fieldWithPath("postResponses.[].createdAt").type(STRING).description("작성일"),
+                                        fieldWithPath("postResponses.[].updatedAt").type(STRING).description("갱신일")
                                 )
                         )
                 )
@@ -426,5 +433,69 @@ public class PostControllerDocTest {
                         )
                 )
                 .andDo(print());
+    }
+
+    /**
+     * Post更新
+     */
+    @CustomWithMockUser
+    @Transactional
+    @Test
+    @DisplayName("/post/{postId},　ポスト更新")
+    void updatePost() throws Exception {
+        // given
+        // 先に保存されたMockUserのデータを呼び出す
+        var member = memberRepository.findAll().get(0);
+        var post1 = Post.builder()
+                .title("美味しいラーメンが食いたい。")
+                .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+                .build();
+        post1.addMember(member);
+        var post2 = Post.builder()
+                .title("美味しいラーメンが食いたい。")
+                .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+                .build();
+        var hashTag = HashTag.builder()
+                .name("#ラーメン")
+                .build();
+        var postHashTag = PostHashTag.builder()
+                .build();
+        postHashTag.addPost(post2);
+        postHashTag.addHashTag(hashTag);
+        post2.addMember(member);
+        postRepository.saveAll(List.of(post1, post2));
+
+        var postUpdate = PostUpdate.builder()
+                .title("신입 개발자의 포트폴리오 작성법")
+                .content("안녕하세요, 저는 현재 광주소프트웨어마이스터고등학교에 재학중인 유시온입니다! 제가 9개월 동안 취업준비를 하면서 약 60개 기업에 지원하여 8개의 회사에 서류합격을 하였는데요. " +
+                        "해당 글을 통해 포트폴리오를 작성하면서 느낀 점과 합격률이 높았던 방법에 관해 설명해 드리려고 합니다.")
+                .hashTags("#Spring#Java#Kakao")
+                .build();
+        String json = objectMapper.writeValueAsString(postUpdate);
+
+        // expected
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/post/{postId}", post2.getId())
+                        .content(json)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("post-update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("postId")
+                                        .description("게시글 ID")
+                                        .attributes(key("constraint").value("NOT NULL, Long"))
+                        ),
+                        requestFields(
+                                fieldWithPath("title").type(STRING).description("제목")
+                                        .attributes(key("constraint").value("1~30자 이내")),
+                                fieldWithPath("content").type(STRING).description("내용")
+                                        .attributes(key("constraint").value("10자 미만")),
+                                fieldWithPath("hashTags").type(STRING).description("해시태그")
+                                        .optional()
+                        )
+                ))
+                .andDo(print());
+
     }
 }
