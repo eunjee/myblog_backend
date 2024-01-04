@@ -20,6 +20,7 @@ public class PostSearch {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;
+    private String hashTags;
 
     public long getOffset() {
         return (long) (Math.max(1, page) - 1) * Math.min(size, MAX_SIZE);

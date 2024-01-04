@@ -505,6 +505,70 @@ public class PostControllerTest {
             .andDo(print());
   }
 
+  @Test
+  @DisplayName("/posts 指定タグのポスト一覧を返す")
+  void getPostsWithDuplicateHashTags() throws Exception {
+    // given
+    var member = Member.builder()
+            .name("テストメンバー")
+            .password("1q2w3e4r")
+            .email("test@test.com")
+            .build();
+    var post1 = Post.builder()
+            .title("豚骨ラーメン")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .build();
+    post1.addMember(member);
+
+    var post2 = Post.builder()
+            .title("明太子パスタ")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .build();
+    post2.addMember(member);
+
+    var post3 = Post.builder()
+            .title("味噌ラーメン")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,5,10,10))
+            .build();
+    post3.addMember(member);
+
+    var tagJava = HashTag.builder()
+            .name("#Java")
+            .build();
+    var postHashTag1 = PostHashTag.builder()
+            .build();
+    postHashTag1.addPost(post1);
+    postHashTag1.addHashTag(tagJava);
+
+    var tagSpring = HashTag.builder()
+            .name("#Spring")
+            .build();
+    var postHashTag2 = PostHashTag.builder()
+            .build();
+    postHashTag2.addPost(post2);
+    postHashTag2.addHashTag(tagSpring);
+
+    postRepository.saveAll(List.of(post1, post2, post3));
+
+    // expected
+    mockMvc.perform(get("/posts?hashTags=Java,Spring")
+                    .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isLast", is(true)))
+            .andExpect(jsonPath("$.totalLength", is(3)))
+            .andExpect(jsonPath("$.lastPage", is(1)))
+            .andExpectAll(
+                    jsonPath("$.postResponses.[0].title", is("明太子パスタ")),
+                    jsonPath("$.postResponses.[0].content", is("なら一蘭に行こう。ラーメンは豚骨だ。")),
+                    jsonPath("$.postResponses.[0].author", is("テストメンバー")),
+                    jsonPath("$.postResponses.[0].hashTags.[0].name", is("#Spring"))
+            )
+            .andDo(print());
+  }
+
   /**
    * Post更新
    */
