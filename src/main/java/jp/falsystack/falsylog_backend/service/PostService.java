@@ -47,7 +47,7 @@ public class PostService {
     public PostListResponse getPosts(PostSearch postSearch) {
         long postCount = postRepository.getCount(postSearch);
         int lastPage = (int) Math.ceil((double) postCount / postSearch.getSize());
-        boolean isLast = postSearch.getPage() == lastPage;
+        boolean isLast = postSearch.getPage() == ((lastPage == 0) ? 1 : lastPage);
 
         return PostListResponse.builder()
                 .lastPage(lastPage)

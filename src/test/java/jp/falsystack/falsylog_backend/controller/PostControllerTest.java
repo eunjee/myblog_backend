@@ -415,7 +415,7 @@ public class PostControllerTest {
 
   @Test
   @DisplayName("/posts 期間内のポスト一覧を返す")
-  void getPostsWithFilter() throws Exception {
+  void getPostsWithDuration() throws Exception {
     // given
     var member = Member.builder()
             .name("テストメンバー")
@@ -453,6 +453,52 @@ public class PostControllerTest {
             .andExpect(jsonPath("$.lastPage", is(1)))
             .andExpectAll(
                     jsonPath("$.postResponses.[0].title", is("美味しいラーメンが食いたい。")),
+                    jsonPath("$.postResponses.[0].content", is("なら一蘭に行こう。ラーメンは豚骨だ。")),
+                    jsonPath("$.postResponses.[0].author", is("テストメンバー"))
+            )
+            .andDo(print());
+  }
+
+  @Test
+  @DisplayName("/posts 指定タイトルのポスト一覧を返す")
+  void getPostsWithTitle() throws Exception {
+    // given
+    var member = Member.builder()
+            .name("テストメンバー")
+            .password("1q2w3e4r")
+            .email("test@test.com")
+            .build();
+    var post1 = Post.builder()
+            .title("豚骨ラーメン")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .build();
+    post1.addMember(member);
+
+    var post2 = Post.builder()
+            .title("明太子パスタ")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .build();
+    post2.addMember(member);
+
+    var post3 = Post.builder()
+            .title("味噌ラーメン")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,5,10,10))
+            .build();
+    post3.addMember(member);
+    postRepository.saveAll(List.of(post1, post2, post3));
+
+    // expected
+    mockMvc.perform(get("/posts?title=ラーメン")
+                    .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isLast", is(true)))
+            .andExpect(jsonPath("$.totalLength", is(2)))
+            .andExpect(jsonPath("$.lastPage", is(1)))
+            .andExpectAll(
+                    jsonPath("$.postResponses.[0].title", is("味噌ラーメン")),
                     jsonPath("$.postResponses.[0].content", is("なら一蘭に行こう。ラーメンは豚骨だ。")),
                     jsonPath("$.postResponses.[0].author", is("テストメンバー"))
             )
