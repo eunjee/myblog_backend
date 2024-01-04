@@ -1,16 +1,6 @@
 package jp.falsystack.falsylog_backend.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
-import java.util.stream.Stream;
 import jp.falsystack.falsylog_backend.annotation.CustomWithMockUser;
 import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Member;
@@ -35,6 +25,17 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
 @SpringBootTest
@@ -410,6 +411,52 @@ public class PostControllerTest {
             jsonPath("$.postResponses.[0].author", is("テストメンバー"))
         )
         .andDo(print());
+  }
+
+  @Test
+  @DisplayName("/posts 期間内のポスト一覧を返す")
+  void getPostsWithFilter() throws Exception {
+    // given
+    var member = Member.builder()
+            .name("テストメンバー")
+            .password("1q2w3e4r")
+            .email("test@test.com")
+            .build();
+    var post1 = Post.builder()
+            .title("美味しいラーメンが食いたい。")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .build();
+    post1.addMember(member);
+
+    var post2 = Post.builder()
+            .title("美味しいラーメンが食いたい。")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .build();
+    post2.addMember(member);
+
+    var post3 = Post.builder()
+            .title("美味しいラーメンが食いたい。")
+            .content("なら一蘭に行こう。ラーメンは豚骨だ。")
+            .createdDateTime(LocalDateTime.of(2024,1,5,10,10))
+            .build();
+    post3.addMember(member);
+    postRepository.saveAll(List.of(post1, post2, post3));
+
+    // expected
+    mockMvc.perform(get("/posts?startDate=2024-01-01T09:00:00&endDate=2024-01-04T10:10:00")
+                    .contentType(APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isLast", is(true)))
+            .andExpect(jsonPath("$.totalLength", is(2)))
+            .andExpect(jsonPath("$.lastPage", is(1)))
+            .andExpectAll(
+                    jsonPath("$.postResponses.[0].title", is("美味しいラーメンが食いたい。")),
+                    jsonPath("$.postResponses.[0].content", is("なら一蘭に行こう。ラーメンは豚骨だ。")),
+                    jsonPath("$.postResponses.[0].author", is("テストメンバー"))
+            )
+            .andDo(print());
   }
 
   /**

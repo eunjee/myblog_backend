@@ -1,9 +1,5 @@
 package jp.falsystack.falsylog_backend.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import jp.falsystack.falsylog_backend.domain.HashTag;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.domain.PostHashTag;
@@ -22,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -46,7 +45,7 @@ public class PostService {
 
     @Transactional
     public PostListResponse getPosts(PostSearch postSearch) {
-        long postCount = postRepository.count();
+        long postCount = postRepository.getCount(postSearch);
         int lastPage = (int) Math.ceil((double) postCount / postSearch.getSize());
         boolean isLast = postSearch.getPage() == lastPage;
 

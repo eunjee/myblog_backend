@@ -11,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import jp.falsystack.falsylog_backend.service.dto.PostEdit;
@@ -32,6 +34,8 @@ public class Post extends BaseEntity {
   @Lob
   private String content;
 
+  private LocalDateTime createdDateTime;
+
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn
   private Member member;
@@ -43,9 +47,10 @@ public class Post extends BaseEntity {
   private List<Comment> comments = new ArrayList<>();
 
   @Builder
-  private Post(String title, String content, Member member) {
+  private Post(String title, String content, LocalDateTime createdDateTime, Member member) {
     this.title = title;
     this.content = content;
+    this.createdDateTime = createdDateTime;
     this.member = member;
   }
 

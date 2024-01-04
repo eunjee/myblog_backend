@@ -1,10 +1,8 @@
 package jp.falsystack.falsylog_backend.request.post;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,15 +11,16 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PostSearch {
 
-  private static final int MAX_SIZE = 100;
+    private static final int MAX_SIZE = 100;
 
-  @Builder.Default
-  private Integer page = 1;
-  @Builder.Default
-  private Integer size = 5;
+    @Builder.Default
+    private Integer page = 1;
+    @Builder.Default
+    private Integer size = 5;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
-  public long getOffset() {
-    return (long) (Math.max(1, page) - 1) * Math.min(size, MAX_SIZE);
-  }
-
+    public long getOffset() {
+        return (long) (Math.max(1, page) - 1) * Math.min(size, MAX_SIZE);
+    }
 }
