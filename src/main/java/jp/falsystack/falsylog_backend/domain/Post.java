@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Entity
@@ -34,6 +35,7 @@ public class Post extends BaseEntity {
   @Lob
   private String content;
 
+  @CreatedDate
   private LocalDateTime createdDateTime;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

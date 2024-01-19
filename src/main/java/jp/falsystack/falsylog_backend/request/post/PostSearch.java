@@ -2,6 +2,7 @@ package jp.falsystack.falsylog_backend.request.post;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,8 +18,8 @@ public class PostSearch {
     private Integer page = 1;
     @Builder.Default
     private Integer size = 5;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String title;
     private String hashTags;
 

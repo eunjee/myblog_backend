@@ -58,11 +58,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private static BooleanBuilder getBuilder(PostSearch postSearch) {
         BooleanBuilder builder = new BooleanBuilder();
         if (!ObjectUtils.isEmpty(postSearch.getStartDate())) {
-            builder.and(QPost.post.createdDateTime.goe(postSearch.getStartDate()));
+            builder.and(QPost.post.createdDateTime.goe(postSearch.getStartDate().atStartOfDay()));
         }
 
         if (!ObjectUtils.isEmpty(postSearch.getEndDate())) {
-            builder.and(QPost.post.createdDateTime.loe(postSearch.getEndDate()));
+            builder.and(QPost.post.createdDateTime.loe(postSearch.getEndDate().plusDays(1).atStartOfDay()));
         }
 
         if (StringUtils.hasText(postSearch.getTitle())) {
