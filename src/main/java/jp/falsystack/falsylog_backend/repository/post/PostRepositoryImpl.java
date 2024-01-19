@@ -65,6 +65,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             builder.and(QPost.post.createdDateTime.loe(postSearch.getEndDate().plusDays(1).atStartOfDay()));
         }
 
+
         if (StringUtils.hasText(postSearch.getTitle())) {
             builder.and(QPost.post.title.contains(postSearch.getTitle()));
         }

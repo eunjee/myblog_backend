@@ -1,5 +1,6 @@
 package jp.falsystack.falsylog_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +22,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import static java.time.LocalDateTime.now;
 
 @Getter
 @Entity
@@ -35,7 +39,6 @@ public class Post extends BaseEntity {
   @Lob
   private String content;
 
-  @CreatedDate
   private LocalDateTime createdDateTime;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -52,7 +55,7 @@ public class Post extends BaseEntity {
   private Post(String title, String content, LocalDateTime createdDateTime, Member member) {
     this.title = title;
     this.content = content;
-    this.createdDateTime = createdDateTime;
+    this.createdDateTime = createdDateTime!=null?createdDateTime:now();
     this.member = member;
   }
 

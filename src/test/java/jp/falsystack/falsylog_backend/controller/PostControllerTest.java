@@ -444,8 +444,14 @@ public class PostControllerTest {
     post3.addMember(member);
     postRepository.saveAll(List.of(post1, post2, post3));
 
+//    List<Post> all = postRepository.findAll();
+//    for(Post post:all){
+//      System.out.println("post.getCreatedDateTime() = " + post.getCreatedDateTime());
+//      System.out.println("post.getCreatedAt() = " + post.getCreatedAt());
+//    }
+
     // expected
-    mockMvc.perform(get("/posts?startDate=2024-01-01T09:00:00&endDate=2024-01-04T10:10:00")
+    mockMvc.perform(get("/posts?startDate=2024-01-01&endDate=2024-01-04")
                     .contentType(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.isLast", is(true)))
