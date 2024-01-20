@@ -37,6 +37,7 @@ public class Post extends BaseEntity {
   private Long id;
   private String title;
   @Lob
+  @Column(name = "content", columnDefinition="TEXT")
   private String content;
 
   private LocalDateTime createdDateTime;
