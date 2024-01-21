@@ -22,6 +22,8 @@ public class PostSearch {
     private LocalDate endDate;
     private String title;
     private String hashTags;
+    @Builder.Default
+    private String sort="desc";
 
     public long getOffset() {
         return (long) (Math.max(1, page) - 1) * Math.min(size, MAX_SIZE);

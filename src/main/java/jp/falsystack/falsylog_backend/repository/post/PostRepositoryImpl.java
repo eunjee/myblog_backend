@@ -33,10 +33,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                     .where(builder)
                     .limit(postSearch.getSize())
                     .offset(postSearch.getOffset())
-                    .orderBy(QPost.post.id.desc())
+                    .orderBy(postSearch.getSort().equals("asc")?QPost.post.id.asc():QPost.post.id.desc())
                     .fetch();
 
-            
+
         return posts;
     }
 
