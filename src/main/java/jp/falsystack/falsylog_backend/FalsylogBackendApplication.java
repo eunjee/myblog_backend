@@ -56,11 +56,11 @@ public class FalsylogBackendApplication {
           LocalDateTime.now());
 
       var hashTag1 = HashTag.builder()
-              .name("AWS")
+              .name("#AWS")
               .build();
 
       var hashTag2 = HashTag.builder()
-              .name("Git")
+              .name("#Git")
               .build();
 
       // TODO: Reactでの無限スクロールのテストの為のデータを入れておく

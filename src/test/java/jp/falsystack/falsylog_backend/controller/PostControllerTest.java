@@ -542,7 +542,7 @@ public class PostControllerTest {
     post3.addMember(member);
 
     var tagJava = HashTag.builder()
-            .name("Java")
+            .name("#Java")
             .build();
     var postHashTag1 = PostHashTag.builder()
             .build();
@@ -550,7 +550,7 @@ public class PostControllerTest {
     postHashTag1.addHashTag(tagJava);
 
     var tagSpring = HashTag.builder()
-            .name("Spring")
+            .name("#Spring")
             .build();
     var postHashTag2 = PostHashTag.builder()
             .build();
@@ -570,7 +570,7 @@ public class PostControllerTest {
                     jsonPath("$.postResponses.[0].title", is("明太子パスタ")),
                     jsonPath("$.postResponses.[0].content", is("なら一蘭に行こう。ラーメンは豚骨だ。")),
                     jsonPath("$.postResponses.[0].author", is("テストメンバー")),
-                    jsonPath("$.postResponses.[0].hashTags.[0].name", is("Spring"))
+                    jsonPath("$.postResponses.[0].hashTags.[0].name", is("#Spring"))
             )
             .andDo(print());
   }

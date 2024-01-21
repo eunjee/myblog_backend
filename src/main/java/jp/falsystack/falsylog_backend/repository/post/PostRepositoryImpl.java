@@ -68,7 +68,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                     select(QPost.post.id)
                             .innerJoin(QPost.post.postHashTags, QPostHashTag.postHashTag)
                             .innerJoin(QPostHashTag.postHashTag.hashTag)
-                            .where(QPostHashTag.postHashTag.hashTag.name.in(postSearch.getHashTags().split(",")))
+                            .where(QPostHashTag.postHashTag.hashTag.name.in(Arrays.stream(postSearch.getHashTags().split(",")).
+                                    map(m->"#".concat(m)).toList()))
             ));
         }
 
