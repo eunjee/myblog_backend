@@ -25,7 +25,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     @Override
     public List<Post> getList(PostSearch postSearch) {
 
-        BooleanBuilder builder = getBuilder(postSearch);
+        BooleanBuilder builder = getBuilder(null, postSearch);
         List<Post> posts = new ArrayList<>();
             posts = query.selectFrom(QPost.post)
                     .leftJoin(QPost.post.postHashTags, QPostHashTag.postHashTag).fetchJoin()
@@ -41,16 +41,34 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     @Override
+    public List<Post> getMemberPostList(Long memberId, PostSearch postSearch) {
+        BooleanBuilder builder = getBuilder(memberId, postSearch);
+
+        List<Post> posts = new ArrayList<>();
+        posts = query.selectFrom(QPost.post)
+                .leftJoin(QPost.post.postHashTags, QPostHashTag.postHashTag).fetchJoin()
+                .leftJoin(QPostHashTag.postHashTag.hashTag).fetchJoin()
+                .where(builder)
+                .limit(postSearch.getSize())
+                .offset(postSearch.getOffset())
+                .orderBy(postSearch.getSort().equals("asc")?QPost.post.id.asc():QPost.post.id.desc())
+                .fetch();
+
+
+        return posts;
+    }
+
+    @Override
     public Long getCount(PostSearch postSearch) {
 
-        BooleanBuilder builder = getBuilder(postSearch);
+        BooleanBuilder builder = getBuilder(null, postSearch);
 
         return (long) query.selectFrom(QPost.post)
                 .where(builder)
                 .fetch().size();
     }
 
-    private static BooleanBuilder getBuilder(PostSearch postSearch) {
+    private static BooleanBuilder getBuilder(Long memberId, PostSearch postSearch) {
         BooleanBuilder builder = new BooleanBuilder();
         if (!ObjectUtils.isEmpty(postSearch.getStartDate())) {
             builder.and(QPost.post.createdAt.goe(postSearch.getStartDate().atStartOfDay()));
@@ -71,6 +89,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                             .where(QPostHashTag.postHashTag.hashTag.name.in(Arrays.stream(postSearch.getHashTags().split(",")).
                                     map(m->"#".concat(m)).toList()))
             ));
+        }
+
+        if(memberId!=null){
+            builder.and(QPost.post.member.id.eq(memberId));
         }
 
         return builder;

@@ -7,6 +7,7 @@ import java.util.List;
 import jp.falsystack.falsylog_backend.domain.Member;
 import jp.falsystack.falsylog_backend.domain.Post;
 import jp.falsystack.falsylog_backend.repository.post.PostRepository;
+import jp.falsystack.falsylog_backend.request.post.PostSearch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,5 +79,37 @@ class PostRepositoryTest {
         .containsExactlyInAnyOrder(
             tuple("美味しいラーメンが食いたい。", "なら一蘭に行こう。ラーメンは豚骨だ。")
         );
+  }
+
+  @Test
+  @DisplayName("회원별 게시글 목록을 조회할 수 있다.")
+  void getMemberPostList(){
+    // given
+    var member = Member.builder()
+            .name("조은지")
+            .password("1q2w3e4r")
+            .email("test@test.com")
+            .build();
+    var post = Post.builder()
+            .title("제목입니당")
+            .content("내용입니다앙")
+            .build();
+    post.addMember(member);
+
+    //TODO given에서 exception이 발생할 환경을 만들면 안된다.
+    postRepository.save(post);
+
+    //when
+    PostSearch postSearch = PostSearch.builder().build();
+    List<Post> memberPosts = postRepository.getMemberPostList(member.getId(), postSearch);
+
+    //then
+    assertThat(memberPosts)
+            .hasSize(1)
+            .extracting("title", "content")
+            .containsExactlyInAnyOrder(
+                    tuple(post.getTitle(), post.getContent())
+            );
+
   }
 }

@@ -25,8 +25,6 @@ public class Member extends BaseEntity {
   private String name;
   private String email;
   private String password;
-  private LocalDateTime createdAt; // TODO: BaseEntity 의 createdAt와 중복되어서 현재 값이 안들어감 필드명 변경 필요
-
   @OneToMany(mappedBy = "member")
   private List<Post> posts = new ArrayList<>();
 
@@ -37,7 +35,7 @@ public class Member extends BaseEntity {
     this.name = name;
     this.email = email;
     this.password = password;
-    this.createdAt = createdAt;
+    this.setCreatedAt(createdAt);
   }
 
   public static Member of(String name, String email, String password, LocalDateTime createdAt) {

@@ -8,6 +8,7 @@ import java.util.List;
 public interface PostRepositoryCustom {
 
   List<Post> getList(PostSearch postSearch);
+  List<Post> getMemberPostList(Long memberId, PostSearch postSearch);
 
   Long getCount(PostSearch postSearch);
 }

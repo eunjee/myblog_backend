@@ -59,6 +59,21 @@ public class PostService {
                         .toList())
                 .build();
     }
+    @Transactional
+    public PostListResponse getMemberPosts(Long memberId, PostSearch postSearch) {
+        long postCount = postRepository.getCount(postSearch);
+        int lastPage = (int) Math.ceil((double) postCount / postSearch.getSize());
+        boolean isLast = postSearch.getPage() == ((lastPage == 0) ? 1 : lastPage);
+        return PostListResponse.builder()
+                .lastPage(lastPage)
+                .totalLength(postCount)
+                .isLast(isLast)
+                .postResponses(postRepository.getMemberPostList(memberId, postSearch)
+                        .stream()
+                        .map(PostResponse::from)
+                        .toList())
+                .build();
+    }
 
     @Transactional
     public PostResponse getPost(Long postId) {
@@ -114,4 +129,6 @@ public class PostService {
             post.addPostHashTags(postHashTags);
         }
     }
+
+
 }

@@ -19,9 +19,9 @@ public class PostResponse {
   private List<HashTag> hashTags;
 
   @Builder
-  public PostResponse(Long id, String title, String content, String author, List<HashTag> hashTags,
-      LocalDateTime createdAt,
-      LocalDateTime updatedAt) {
+  public PostResponse(Long id, String title, String content,  String author, List<HashTag> hashTags,
+                      LocalDateTime createdAt,
+                      LocalDateTime updatedAt) {
     this.id = id;
     this.title = title;
     this.content = content;
