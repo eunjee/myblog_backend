@@ -97,3 +97,8 @@
   - [x] 統合テスト
   - [x] Business Layerテスト
   - [x] Persistence Layerテスト
+
+### 2024.01.27
+- [x] Post Entity 수정
+  - [x] 중복되는 createdDate 필드 삭제
+  - [x] @PrePersist 사용 createdAt을 입력받을 수 있도록 수정 (null일 경우 현재 시간으로 설정)
