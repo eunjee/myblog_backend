@@ -425,21 +425,21 @@ public class PostControllerTest {
     var post1 = Post.builder()
             .title("美味しいラーメンが食いたい。")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .createdAt(LocalDateTime.of(2024,1,1,10,10))
             .build();
     post1.addMember(member);
 
     var post2 = Post.builder()
             .title("美味しいラーメンが食いたい。")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .createdAt(LocalDateTime.of(2024,1,1,10,10))
             .build();
     post2.addMember(member);
 
     var post3 = Post.builder()
             .title("美味しいラーメンが食いたい。")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,5,10,10))
+            .createdAt(LocalDateTime.of(2024,1,5,10,10))
             .build();
     post3.addMember(member);
     postRepository.saveAll(List.of(post1, post2, post3));
@@ -477,21 +477,21 @@ public class PostControllerTest {
     var post1 = Post.builder()
             .title("豚骨ラーメン")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .createdAt(LocalDateTime.of(2024,1,1,10,10))
             .build();
     post1.addMember(member);
 
     var post2 = Post.builder()
             .title("明太子パスタ")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .createdAt(LocalDateTime.of(2024,1,1,10,10))
             .build();
     post2.addMember(member);
 
     var post3 = Post.builder()
             .title("味噌ラーメン")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,5,10,10))
+            .createdAt(LocalDateTime.of(2024,1,5,10,10))
             .build();
     post3.addMember(member);
     postRepository.saveAll(List.of(post1, post2, post3));
@@ -523,21 +523,21 @@ public class PostControllerTest {
     var post1 = Post.builder()
             .title("豚骨ラーメン")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .createdAt(LocalDateTime.of(2024,1,1,10,10))
             .build();
     post1.addMember(member);
 
     var post2 = Post.builder()
             .title("明太子パスタ")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,1,10,10))
+            .createdAt(LocalDateTime.of(2024,1,1,10,10))
             .build();
     post2.addMember(member);
 
     var post3 = Post.builder()
             .title("味噌ラーメン")
             .content("なら一蘭に行こう。ラーメンは豚骨だ。")
-            .createdDateTime(LocalDateTime.of(2024,1,5,10,10))
+            .createdAt(LocalDateTime.of(2024,1,5,10,10))
             .build();
     post3.addMember(member);
 

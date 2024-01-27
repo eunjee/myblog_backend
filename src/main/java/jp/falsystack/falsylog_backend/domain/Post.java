@@ -40,8 +40,6 @@ public class Post extends BaseEntity {
   @Column(name = "content", columnDefinition="TEXT")
   private String content;
 
-  private LocalDateTime createdDateTime;
-
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn
   private Member member;
@@ -53,11 +51,11 @@ public class Post extends BaseEntity {
   private List<Comment> comments = new ArrayList<>();
 
   @Builder
-  private Post(String title, String content, LocalDateTime createdDateTime, Member member) {
+  private Post(String title, String content,LocalDateTime createdAt, Member member) {
     this.title = title;
     this.content = content;
-    this.createdDateTime = createdDateTime!=null?createdDateTime:now();
     this.member = member;
+    this.setCreatedAt(createdAt);
   }
 
   public void addPostHashTags(List<PostHashTag> postHashTags) {
