@@ -96,8 +96,21 @@ class PostRepositoryTest {
             .build();
     post.addMember(member);
 
+    var member2 = Member.builder()
+            .name("조은지22")
+            .password("1q2w3e4r")
+            .email("test@test.com")
+            .build();
+
+    var post2 = Post.builder()
+            .title("제목입니당")
+            .content("내용입니다앙")
+            .build();
+    post2.addMember(member2);
+
     //TODO given에서 exception이 발생할 환경을 만들면 안된다.
     postRepository.save(post);
+    postRepository.save(post2);
 
     //when
     PostSearch postSearch = PostSearch.builder().build();
