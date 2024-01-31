@@ -114,7 +114,7 @@ class PostRepositoryTest {
 
     //when
     PostSearch postSearch = PostSearch.builder().build();
-    List<Post> memberPosts = postRepository.getMemberPostList(member.getId(), postSearch);
+    List<Post> memberPosts = postRepository.getMemberPostList(member.getName(), postSearch);
 
     //then
     assertThat(memberPosts)

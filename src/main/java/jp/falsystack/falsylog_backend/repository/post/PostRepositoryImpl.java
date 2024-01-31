@@ -41,8 +41,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     @Override
-    public List<Post> getMemberPostList(Long memberId, PostSearch postSearch) {
-        BooleanBuilder builder = getBuilder(memberId, postSearch);
+    public List<Post> getMemberPostList(String name, PostSearch postSearch) {
+        BooleanBuilder builder = getBuilder(name, postSearch);
 
         List<Post> posts = new ArrayList<>();
         posts = query.selectFrom(QPost.post)
@@ -68,7 +68,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetch().size();
     }
 
-    private static BooleanBuilder getBuilder(Long memberId, PostSearch postSearch) {
+    private static BooleanBuilder getBuilder(String name, PostSearch postSearch) {
         BooleanBuilder builder = new BooleanBuilder();
         if (!ObjectUtils.isEmpty(postSearch.getStartDate())) {
             builder.and(QPost.post.createdAt.goe(postSearch.getStartDate().atStartOfDay()));
@@ -91,8 +91,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             ));
         }
 
-        if(memberId!=null){
-            builder.and(QPost.post.member.id.eq(memberId));
+        if(StringUtils.hasText(name)){
+            builder.and(QPost.post.member.name.eq(name));
         }
 
         return builder;
