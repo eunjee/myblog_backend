@@ -1,5 +1,6 @@
 package jp.falsystack.falsylog_backend.controller;
 
+import jakarta.validation.Valid;
 import jp.falsystack.falsylog_backend.exception.FileUploadFail;
 import jp.falsystack.falsylog_backend.request.ResumeCreate;
 import jp.falsystack.falsylog_backend.service.ResumeService;
@@ -18,7 +19,7 @@ public class ResumeController {
 
     //TODO 확장자, 파일 크기 제한
     @PostMapping("member/{name}/resume")
-    public String createResume(@PathVariable String name, @ModelAttribute ResumeCreate resumeCreate){
+    public String createResume(@PathVariable String name, @Valid @ModelAttribute ResumeCreate resumeCreate){
         //실제 파일 업로드
         String fileUrl="";
         try {
