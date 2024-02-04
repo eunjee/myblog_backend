@@ -104,3 +104,7 @@
   - [x] @PrePersist 사용 createdAt을 입력받을 수 있도록 수정 (null일 경우 현재 시간으로 설정)
 - [x] Member별로 작성한 게시글 목록 조회 기능 추가
   - [x] 테스트 코드 작성 완료
+
+### 2024.02.04
+- [x] Resume Entity 수정
+  - CaseCadeType 정리 필요

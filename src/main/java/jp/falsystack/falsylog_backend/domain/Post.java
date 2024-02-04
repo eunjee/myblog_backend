@@ -1,17 +1,7 @@
 package jp.falsystack.falsylog_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,6 +29,10 @@ public class Post extends BaseEntity {
   @Lob
   @Column(name = "content", columnDefinition="TEXT")
   private String content;
+
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @JoinColumn
+  private Resume resume;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn
