@@ -30,10 +30,6 @@ public class Post extends BaseEntity {
   @Column(name = "content", columnDefinition="TEXT")
   private String content;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-  @JoinColumn
-  private Resume resume;
-
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn
   private Member member;

@@ -1,10 +1,7 @@
 package jp.falsystack.falsylog_backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +22,11 @@ public class Member extends BaseEntity {
   private String name;
   private String email;
   private String password;
+
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @JoinColumn(name="resume_id")
+  private Resume resume;
+
   @OneToMany(mappedBy = "member")
   private List<Post> posts = new ArrayList<>();
 
