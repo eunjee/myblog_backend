@@ -60,7 +60,7 @@ public class PostService {
                 .build();
     }
     @Transactional
-    public PostListResponse getMemberPosts(Long memberId, PostSearch postSearch) {
+    public PostListResponse getMemberPosts(String name, PostSearch postSearch) {
         long postCount = postRepository.getCount(postSearch);
         int lastPage = (int) Math.ceil((double) postCount / postSearch.getSize());
         boolean isLast = postSearch.getPage() == ((lastPage == 0) ? 1 : lastPage);
@@ -68,7 +68,7 @@ public class PostService {
                 .lastPage(lastPage)
                 .totalLength(postCount)
                 .isLast(isLast)
-                .postResponses(postRepository.getMemberPostList(memberId, postSearch)
+                .postResponses(postRepository.getMemberPostList(name, postSearch)
                         .stream()
                         .map(PostResponse::from)
                         .toList())

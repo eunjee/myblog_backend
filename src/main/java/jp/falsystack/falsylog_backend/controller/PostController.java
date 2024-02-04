@@ -61,9 +61,9 @@ public class PostController {
         return postService.getPosts(request);
     }
 
-    @GetMapping("/member/{memberId}/posts")
-    public PostListResponse getMemberPosts(@PathVariable Long memberId, @ModelAttribute PostSearch postSearch) {
-        return postService.getMemberPosts(memberId, postSearch);
+    @GetMapping("/member/{name}/posts")
+    public PostListResponse getMemberPosts(@PathVariable String name, @ModelAttribute PostSearch postSearch) {
+        return postService.getMemberPosts(name, postSearch);
     }
 
     @PutMapping("/post/{postId}")
