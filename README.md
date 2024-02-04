@@ -112,4 +112,7 @@
 ### 2024.02.04
 - [x] Resume Entity 수정
   - CaseCadeType 정리 필요
+- [x] 파일 업로드, 조회, 삭제 API 구현
+  - 업로드 시 validation 필요
+  - 업로드 시 경로 설정 필요
 

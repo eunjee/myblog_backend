@@ -23,7 +23,7 @@ public class QResume extends EntityPathBase<Resume> {
 
     public final StringPath name = createString("name");
 
-    public final NumberPath<Integer> size = createNumber("size", Integer.class);
+    public final NumberPath<Long> size = createNumber("size", Long.class);
 
     public final StringPath url = createString("url");
 

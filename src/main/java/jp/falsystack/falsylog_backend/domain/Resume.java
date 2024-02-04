@@ -20,10 +20,10 @@ public class Resume {
 
     private String url;
 
-    private int size;
+    private long size;
 
     @Builder
-    private Resume(String name, String url, int size){
+    private Resume(String name, String url, long size){
         this.name = name;
         this.url = url;
         this.size = size;

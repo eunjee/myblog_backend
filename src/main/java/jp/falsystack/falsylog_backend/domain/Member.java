@@ -58,4 +58,11 @@ public class Member extends BaseEntity {
         .build();
   }
 
+  public void addResume(Resume resume){
+    this.resume = resume;
+  }
+  public void clearResume(){
+    this.resume = null;
+  }
+
 }
