@@ -35,7 +35,7 @@ public class ResumeService {
     public String getResume(String userName){
         Member member = memberRepository.findByName(userName).orElseThrow(MemberNotFound::new);
         if(member.getResume()==null){
-            return null;
+            return "";
         }
         return member.getResume().getUrl();
     }
